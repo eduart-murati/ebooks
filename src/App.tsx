@@ -29,96 +29,78 @@ function App() {
     setPage(1);
   };
 
-  if (selectedBookKey) {
-    return (
-      <Grid templateAreas={'"nav nav" "main main"'} minH="100vh">
-        <GridItem area="nav" padding={5}>
-          <NavBar
-            searchText=""
-            onSearchChange={() => {}}
-            onSearchSubmit={() => {}}
-            isDetailsView={true}
-            onBack={handleBackToHome}
-            genres={genres || []}
-            selectedGenre={bookQuery.genre}
-            onSelectGenre={(genre: Genre) =>
-              setBookQuery({ ...bookQuery, genre })
-            }
-          />
-        </GridItem>
-        <GridItem area="main" paddingX={5} paddingTop={5}>
-          <BookDetails bookId={selectedBookKey} onBack={handleBackToHome} />
+  return (
+    <>
+      {/* Navbar full-width */}
+      <NavBar
+        searchText={searchText}
+        onSearchChange={setSearchText}
+        onSearchSubmit={(text) =>
+          setBookQuery({ ...bookQuery, searchText: text, genre: null })
+        }
+        isDetailsView={!!selectedBookKey}
+        onBack={selectedBookKey ? handleBackToHome : undefined}
+        genres={genres || []}
+        selectedGenre={bookQuery.genre}
+        onSelectGenre={(genre: Genre) =>
+          setBookQuery({ ...bookQuery, genre, searchText: "" })
+        }
+      />
+
+      <Grid
+        templateAreas={{
+          base: `"main"`,
+          lg: showAside ? `"aside main"` : `"main"`,
+        }}
+        templateColumns={{
+          base: "1fr",
+          lg: showAside ? "200px 1fr" : "1fr",
+        }}
+        minH="100vh"
+        pt={2} // hapësirë nën Navbar
+      >
+        {showAside && genres && (
+          <GridItem area="aside" padding={5}>
+            <GenreList
+              genres={genres}
+              selectedGenre={bookQuery.genre}
+              onSelectGenre={(genre) =>
+                setBookQuery({ ...bookQuery, genre, searchText: "" })
+              }
+            />
+          </GridItem>
+        )}
+
+        <GridItem area="main" paddingX={5}>
+          {selectedBookKey ? (
+            <BookDetails bookId={selectedBookKey} onBack={handleBackToHome} />
+          ) : (
+            <>
+              <HStack gap={5} marginBottom={1} paddingX={5}>
+                <BookHeading bookQuery={bookQuery} />
+              </HStack>
+
+              <HStack gap={5} marginBottom={1} paddingX={5}>
+                <SortSelector
+                  sortOrder={bookQuery.sortOrder}
+                  onSelectSortOrder={(sortOrder) =>
+                    setBookQuery({ ...bookQuery, sortOrder })
+                  }
+                  isDisabled={!!searchText}
+                />
+              </HStack>
+
+              <BookGrid
+                bookQuery={bookQuery}
+                page={page}
+                setPage={setPage}
+                onSelectBook={(key: string) => setSelectedBookKey(key)}
+              />
+            </>
+          )}
         </GridItem>
       </Grid>
-    );
-  }
-
-  return (
-    <Grid
-      templateAreas={{
-        base: `"nav" "main"`,
-        lg: `"nav nav" "aside main"`,
-      }}
-      templateColumns={{
-        base: "1fr",
-        lg: "200px 1fr",
-      }}
-      minH="100vh"
-    >
-      {/* Navbar */}
-      <GridItem area="nav" padding={5}>
-        <NavBar
-          searchText={searchText}
-          onSearchChange={(value: string) => setSearchText(value)}
-          onSearchSubmit={(text: string) =>
-            setBookQuery({ ...bookQuery, searchText: text, genre: null })
-          }
-          isDetailsView={false}
-          genres={genres || []}
-          selectedGenre={bookQuery.genre}
-          onSelectGenre={(genre: Genre) =>
-            setBookQuery({ ...bookQuery, genre, searchText: "" })
-          }
-        />
-      </GridItem>
-
-      {/* Aside (desktop only) */}
-      {showAside && genres && (
-        <GridItem area="aside" padding={5}>
-          <GenreList
-            genres={genres}
-            selectedGenre={bookQuery.genre}
-            onSelectGenre={(genre) =>
-              setBookQuery({ ...bookQuery, genre, searchText: "" })
-            }
-          />
-        </GridItem>
-      )}
-
-      {/* Main content */}
-      <GridItem area="main" paddingX={5}>
-        <HStack gap={5} marginBottom={1} paddingX={5}>
-          <BookHeading bookQuery={bookQuery} />
-        </HStack>
-
-        <HStack gap={5} marginBottom={1} paddingX={5}>
-          <SortSelector
-            sortOrder={bookQuery.sortOrder}
-            onSelectSortOrder={(sortOrder) =>
-              setBookQuery({ ...bookQuery, sortOrder })
-            }
-            isDisabled={!!searchText}
-          />
-        </HStack>
-
-        <BookGrid
-          bookQuery={bookQuery}
-          page={page}
-          setPage={setPage}
-          onSelectBook={(key: string) => setSelectedBookKey(key)}
-        />
-      </GridItem>
-    </Grid>
+    </>
   );
 }
 

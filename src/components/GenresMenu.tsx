@@ -1,8 +1,17 @@
 // components/GenresMenu.tsx
-import { useState } from "react";
-import { VStack, Button, Box } from "@chakra-ui/react";
+"use client";
+
+import {
+  Button,
+  Menu,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  Portal,
+} from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa";
 import type { Genre } from "@/hooks/useGenres";
+import { useColorMode } from "./ui/color-mode";
 
 interface Props {
   genres: Genre[];
@@ -11,49 +20,61 @@ interface Props {
 }
 
 const GenresMenu = ({ genres, selectedGenre, onSelectGenre }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { colorMode } = useColorMode();
 
   return (
-    <Box position="relative">
-      <Button onClick={() => setIsOpen(!isOpen)} size="sm" variant="outline">
-        <FaBars />
-      </Button>
-
-      {isOpen && (
-        <VStack
-          position="absolute"
-          top="100%"
-          right={0} // e pozicionon nga cepi i djathtë
-          gap={1}
-          py={2}
-          px={2}
-          bg="white"
-          border="1px solid"
-          borderColor="gray.200"
-          borderRadius="md"
-          shadow="md"
-          align="stretch"
-          zIndex={1000}
-          width="190px" // ose mund ta bësh 30% më të gjerë se butoni
+    <Menu.Root>
+      <MenuTrigger asChild>
+        <Button
+          size="sm"
+          variant="outline"
+          color={colorMode === "dark" ? "whiteAlpha.900" : "gray.800"}
+          borderColor={colorMode === "dark" ? "gray.600" : "gray.300"}
         >
-          {genres.map((genre) => (
-            <Button
-              key={genre.id}
-              variant={selectedGenre?.id === genre.id ? "solid" : "ghost"}
-              colorScheme={selectedGenre?.id === genre.id ? "blue" : "gray"}
-              width="100%"
-              justifyContent="flex-start"
-              onClick={() => {
-                onSelectGenre(genre);
-                setIsOpen(false);
-              }}
-            >
-              {genre.name}
-            </Button>
-          ))}
-        </VStack>
-      )}
-    </Box>
+          {/* Vendos ikonën brenda përmbajtjes së butonit */}
+          <FaBars style={{ marginRight: 6 }} />
+          {selectedGenre ? selectedGenre.name : "Zgjidh Kategori"}
+        </Button>
+      </MenuTrigger>
+
+      <Portal>
+        <Menu.Positioner>
+          <MenuContent
+            bg={colorMode === "dark" ? "gray.800" : "white"}
+            borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
+            minW="200px"
+            boxShadow="md"
+            p={1}
+            borderRadius="md"
+          >
+            {genres.map((genre) => (
+              <MenuItem
+                key={genre.id}
+                onSelect={() => onSelectGenre(genre)}
+                color={
+                  genre.id === selectedGenre?.id
+                    ? colorMode === "dark"
+                      ? "blue.300"
+                      : "blue.500"
+                    : colorMode === "dark"
+                    ? "whiteAlpha.900"
+                    : "gray.800"
+                }
+                fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
+                _hover={{
+                  bg: colorMode === "dark" ? "gray.700" : "gray.100",
+                }}
+                px={3}
+                py={2}
+                value={""}
+              >
+                {genre.name}
+              </MenuItem>
+            ))}
+          </MenuContent>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
   );
 };
 
