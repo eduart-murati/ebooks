@@ -6,7 +6,6 @@ import {
   Spinner,
   Button,
   Heading,
-  useBreakpointValue,
 } from "@chakra-ui/react";
 import type { IconType } from "react-icons/lib";
 import {
@@ -58,8 +57,8 @@ const genreOrder = [
   "Mystery",
   "History",
   "Biography",
-  "Horror",
   "Thriller",
+  "Horror",
 ];
 
 interface Props {
@@ -75,8 +74,6 @@ const GenreList = ({
   genres,
   isVisible = true,
 }: Props) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   if (!genres) return <Spinner />;
 
   const sortedGenres = genres

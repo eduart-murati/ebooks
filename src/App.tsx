@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Grid, GridItem, HStack, useBreakpointValue } from "@chakra-ui/react";
-import NavBar from "./components/Navbar";
+import NavBar from "./components/NavBar";
 import GenreList from "./components/GenreList";
 import BookGrid from "./components/BookGrid";
 import SortSelector from "./components/SortSelector";
@@ -69,8 +69,8 @@ function App() {
       <GridItem area="nav" padding={5}>
         <NavBar
           searchText={searchText}
-          onSearchChange={(value) => setSearchText(value)}
-          onSearchSubmit={(text) =>
+          onSearchChange={(value: string) => setSearchText(value)}
+          onSearchSubmit={(text: string) =>
             setBookQuery({ ...bookQuery, searchText: text, genre: null })
           }
           isDetailsView={false}
