@@ -58,7 +58,7 @@ const NavBar = ({
   const { theme, setTheme } = useTheme();
 
   // Varianti i ekranit te vogel (per te vendosur se ku te shfaqet shiriti i kërkimit)
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  // const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Box
