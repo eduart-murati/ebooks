@@ -1,10 +1,21 @@
-import { HStack, Image, Button, Box, Text } from "@chakra-ui/react";
-import { useTheme } from "next-themes";
+// components/NavBar.tsx
+import {
+  HStack,
+  Image,
+  Button,
+  Box,
+  Text,
+  useBreakpointValue,
+  // Zgjidhim problemin e useTheme duke e importuar ketu nese ju vjen nga Chakra UI,
+  // por e lëmë si next-themes per kontekstin tuaj
+} from "@chakra-ui/react";
+import { useTheme } from "next-themes"; // Mbetet per theme
 import logo_light from "../assets/logo_light.svg";
 import logo_dark from "../assets/logo_dark.svg";
 import { FaMoon, FaSun } from "react-icons/fa";
 import type { Genre } from "@/hooks/useGenres";
-import GenresMenu from "./GenresMenu";
+import GenresMenu from "./GenresMenu"; // Mbetet per menu
+import SearchInput from "./SearchInput"; // E importojme komponentin tone te ndare
 
 interface Props {
   searchText: string;
@@ -46,56 +57,66 @@ const NavBar = ({
 }: Props) => {
   const { theme, setTheme } = useTheme();
 
+  // Varianti i ekranit te vogel (per te vendosur se ku te shfaqet shiriti i kërkimit)
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <Box
-      w="100vw" // full viewport width
+      w="100%" // Wideness e rregulluar
       py={2}
-      px={4} // minimal padding, mund të hiqet për edge-to-edge absolute
+      px={{ base: 4, md: 8 }} // Padding responsiv
       bg={theme === "dark" ? "gray.800" : "white"}
-      boxShadow="sm"
+      boxShadow="md"
+      position="sticky"
+      top={0}
+      zIndex={100}
     >
-      <HStack w="100%" align="center" gap={2} justify="space-between">
-        {/* Back button për detajet */}
-        {isDetailsView && onBack && (
-          <Button onClick={onBack} colorScheme="blue">
-            <HStack gap={2}>
-              <ArrowBackSvg />
-              <Text>Kthehu</Text>
-            </HStack>
-          </Button>
-        )}
+      {/* Rreshti i Parë (Logo, Search/Desktop, Buttons) */}
+      <HStack
+        w="100%"
+        align="center"
+        gap={{ base: 2, md: 4 }}
+        justify="space-between"
+      >
+        {/* Grupi i Majtë: Kthehu + Logo */}
+        <HStack flexShrink={0} gap={2}>
+          {isDetailsView && onBack && (
+            <Button
+              onClick={onBack}
+              colorScheme="blue"
+              size={{ base: "sm", md: "md" }}
+            >
+              <HStack gap={1}>
+                <ArrowBackSvg style={{ width: "16px", height: "16px" }} />
+                <Text display={{ base: "none", md: "block" }}>Kthehu</Text>
+              </HStack>
+            </Button>
+          )}
 
-        {/* Logo */}
-        <Image
-          src={theme === "dark" ? logo_dark : logo_light}
-          width="189px"
-          height="47px"
-          alt="Logo"
-        />
+          {/* Logo */}
+          <Image
+            src={theme === "dark" ? logo_dark : logo_light}
+            width={{ base: "120px", md: "189px" }}
+            height={{ base: "30px", md: "47px" }}
+            alt="Logo"
+          />
+        </HStack>
 
-        {/* Search */}
-        <Box flex="1" minW={{ base: "100%", md: "250px" }} maxW="600px" mx={4}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onSearchSubmit(searchText);
-            }}
-          >
-            <input
-              value={searchText}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Kerko..."
-              style={{
-                width: "100%",
-                borderRadius: "999px",
-                padding: "8px 16px",
-                border: "1px solid gray",
-              }}
-            />
-          </form>
+        {/* Search - Desktop (shfaqet vetëm në ekrane të mëdha, zë hapësirën e mbetur) */}
+        <Box
+          flex="1"
+          maxW="600px"
+          mx={{ base: 0, md: 4 }}
+          display={{ base: "none", md: "block" }} // Fshihet në mobile
+        >
+          <SearchInput
+            searchText={searchText}
+            onSearchChange={onSearchChange}
+            onSearchSubmit={onSearchSubmit}
+          />
         </Box>
 
-        {/* Buttons + Genres */}
+        {/* Grupi i Djathtë: Genres + Theme Toggle */}
         <HStack gap={2} flexShrink={0}>
           <GenresMenu
             genres={genres}
@@ -105,12 +126,25 @@ const NavBar = ({
 
           <Button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            size="sm"
+            size={{ base: "sm", md: "md" }}
           >
             {theme === "dark" ? <FaSun /> : <FaMoon />}
           </Button>
         </HStack>
       </HStack>
+
+      {/* Rreshti i Dytë (Search/Mobile) */}
+      {/* Shiriti i kërkimit për Mobile shfaqet në një rresht tjetër, poshtë HStack-ut kryesor */}
+      <Box
+        display={{ base: "block", md: "none" }} // Shfaqet vetëm në mobile
+        mt={2} // Hapësirë lart
+      >
+        <SearchInput
+          searchText={searchText}
+          onSearchChange={onSearchChange}
+          onSearchSubmit={onSearchSubmit}
+        />
+      </Box>
     </Box>
   );
 };

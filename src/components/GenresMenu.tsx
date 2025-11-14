@@ -33,7 +33,7 @@ const GenresMenu = ({ genres, selectedGenre, onSelectGenre }: Props) => {
         >
           {/* Vendos ikonën brenda përmbajtjes së butonit */}
           <FaBars style={{ marginRight: 6 }} />
-          {selectedGenre ? selectedGenre.name : "Zgjidh Kategori"}
+          {selectedGenre ? selectedGenre.name : ""}
         </Button>
       </MenuTrigger>
 
