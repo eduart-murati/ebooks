@@ -1,4 +1,3 @@
-// components/GenresMenu.tsx
 "use client";
 
 import {
@@ -13,27 +12,41 @@ import { FaBars } from "react-icons/fa";
 import type { Genre } from "@/hooks/useGenres";
 import { useColorMode } from "./ui/color-mode";
 
+const translations: Record<string, string> = {
+  All: "Të Gjitha",
+  "Science Fiction": "Shkencor",
+  Fantasy: "Fantazi",
+  Romance: "Romancë",
+  Mystery: "Mister",
+  History: "Histori",
+  Biography: "Biografi",
+  Horror: "Horror",
+  Thriller: "Thriller",
+  Children: "Fëmijë",
+  Poetry: "Poezi",
+};
+
 interface Props {
   genres: Genre[];
   selectedGenre: Genre | null;
   onSelectGenre: (genre: Genre) => void;
 }
 
-const GenresMenu = ({ genres, selectedGenre, onSelectGenre }: Props) => {
+export default function GenresMenu({
+  genres,
+  selectedGenre,
+  onSelectGenre,
+}: Props) {
   const { colorMode } = useColorMode();
 
   return (
-    <Menu.Root>
+    <Menu.Root onSelect={(e: any) => e.preventDefault()}>
       <MenuTrigger asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          color={colorMode === "dark" ? "whiteAlpha.900" : "gray.800"}
-          borderColor={colorMode === "dark" ? "gray.600" : "gray.300"}
-        >
-          {/* Vendos ikonën brenda përmbajtjes së butonit */}
+        <Button size="sm" variant="outline">
           <FaBars style={{ marginRight: 6 }} />
-          {selectedGenre ? selectedGenre.name : ""}
+          {selectedGenre
+            ? translations[selectedGenre.name] || selectedGenre.name
+            : "Kategori"}
         </Button>
       </MenuTrigger>
 
@@ -43,39 +56,39 @@ const GenresMenu = ({ genres, selectedGenre, onSelectGenre }: Props) => {
             bg={colorMode === "dark" ? "gray.800" : "white"}
             borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
             minW="200px"
-            boxShadow="md"
             p={1}
             borderRadius="md"
           >
-            {genres.map((genre) => (
-              <MenuItem
-                key={genre.id}
-                onSelect={() => onSelectGenre(genre)}
-                color={
-                  genre.id === selectedGenre?.id
-                    ? colorMode === "dark"
-                      ? "blue.300"
-                      : "blue.500"
-                    : colorMode === "dark"
-                    ? "whiteAlpha.900"
-                    : "gray.800"
-                }
-                fontWeight={genre.id === selectedGenre?.id ? "bold" : "normal"}
-                _hover={{
-                  bg: colorMode === "dark" ? "gray.700" : "gray.100",
-                }}
-                px={3}
-                py={2}
-                value={""}
-              >
-                {genre.name}
-              </MenuItem>
-            ))}
+            {genres.map((genre) => {
+              const isSelected = genre.id === selectedGenre?.id;
+              return (
+                <MenuItem
+                  key={genre.id}
+                  value={genre.name}
+                  onSelect={() => onSelectGenre(genre)}
+                  fontWeight={isSelected ? "bold" : "normal"}
+                  color={
+                    isSelected
+                      ? colorMode === "dark"
+                        ? "blue.300"
+                        : "blue.600"
+                      : colorMode === "dark"
+                      ? "whiteAlpha.900"
+                      : "gray.800"
+                  }
+                  _hover={{
+                    bg: colorMode === "dark" ? "gray.700" : "gray.100",
+                  }}
+                  px={3}
+                  py={2}
+                >
+                  {translations[genre.name] || genre.name}
+                </MenuItem>
+              );
+            })}
           </MenuContent>
         </Menu.Positioner>
       </Portal>
     </Menu.Root>
   );
-};
-
-export default GenresMenu;
+}

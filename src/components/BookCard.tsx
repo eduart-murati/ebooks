@@ -18,7 +18,8 @@ interface Props {
 
 const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
   const isCoverAvailable = !!book.cover_url;
-  const NO_IMAGE_URL = "https://via.placeholder.com/200x300?text=No+Cover";
+  const NO_IMAGE_URL =
+    "https://dummyimage.com/200x300/cccccc/000000&text=No+Cover";
   const imageUrl = isCoverAvailable ? book.cover_url : NO_IMAGE_URL;
 
   return (
@@ -39,25 +40,33 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
         />
       </AspectRatio>
 
-      <CardBody>
-        <VStack align="flex-start" gap={1}>
-          <Text lineClamp={2} fontSize="xl" fontWeight="bold">
+      <CardBody p={3}>
+        {" "}
+        {/* Zvogëlimi i padding-ut të CardBody */}
+        <VStack align="flex-start" gap={0}>
+          {" "}
+          {/* Zvogëlimi i ndarjes (gap) */}
+          <Text lineClamp={2} fontSize="lg" fontWeight="bold">
+            {" "}
+            {/* Zvogëlimi i titullit */}
             {book.title}
           </Text>
           <Text fontSize="sm" color="gray.500">
             {book.author || "Autor i panjohur"}
           </Text>
-          <HStack gap={2} pt={2}>
-            <Button colorScheme="blue" size="sm" onClick={onClickDetails}>
+          <HStack gap={1} pt={2}>
+            {/* Zvogëlimi i butonit në size="xs" */}
+            <Button colorScheme="blue" size="xs" onClick={onClickDetails}>
               Detaje
             </Button>
+            {/* Zvogëlimi i butonit në size="xs" */}
             <Button
               colorScheme={book.hasOnlineRead ? "purple" : "gray"}
-              size="sm"
+              size="xs"
               onClick={onClickRead}
               disabled={!book.hasOnlineRead}
             >
-              {book.hasOnlineRead ? "Lexo / Audio" : "Nuk disponohet"}
+              {book.hasOnlineRead ? "Lexo / Audio" : "Nuk gjendet"}
             </Button>
           </HStack>
         </VStack>

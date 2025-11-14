@@ -1,20 +1,12 @@
 // components/NavBar.tsx
-import {
-  HStack,
-  Image,
-  Button,
-  Box,
-  Text,
-  // Zgjidhim problemin e useTheme duke e importuar ketu nese ju vjen nga Chakra UI,
-  // por e lëmë si next-themes per kontekstin tuaj
-} from "@chakra-ui/react";
-import { useTheme } from "next-themes"; // Mbetet per theme
+import { HStack, Image, Button, Box, Text } from "@chakra-ui/react";
+import { useTheme } from "next-themes";
 import logo_light from "../assets/logo_light.svg";
 import logo_dark from "../assets/logo_dark.svg";
 import { FaMoon, FaSun } from "react-icons/fa";
 import type { Genre } from "@/hooks/useGenres";
-import GenresMenu from "./GenresMenu"; // Mbetet per menu
-import SearchInput from "./SearchInput"; // E importojme komponentin tone te ndare
+import GenresMenu from "./GenresMenu";
+import SearchInput from "./SearchInput";
 
 interface Props {
   searchText: string;
@@ -55,8 +47,6 @@ const NavBar = ({
   onBack,
 }: Props) => {
   const { theme, setTheme } = useTheme();
-
-  // Varianti i ekranit te vogel (per te vendosur se ku te shfaqet shiriti i kërkimit)
 
   return (
     <Box

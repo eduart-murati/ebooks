@@ -76,9 +76,12 @@ function App() {
             <BookDetails bookId={selectedBookKey} onBack={handleBackToHome} />
           ) : (
             <>
-              <HStack gap={5} marginBottom={1} paddingX={5}>
-                <BookHeading bookQuery={bookQuery} />
-              </HStack>
+              {/* Shfaqet vetëm në desktop */}
+              {useBreakpointValue({ base: false, lg: true }) && (
+                <HStack gap={5} marginBottom={1} paddingX={5}>
+                  <BookHeading bookQuery={bookQuery} />
+                </HStack>
+              )}
 
               <HStack gap={5} marginBottom={1} paddingX={5}>
                 <SortSelector
