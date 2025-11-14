@@ -5,7 +5,6 @@ import {
   Button,
   Box,
   Text,
-  useBreakpointValue,
   // Zgjidhim problemin e useTheme duke e importuar ketu nese ju vjen nga Chakra UI,
   // por e lëmë si next-themes per kontekstin tuaj
 } from "@chakra-ui/react";
@@ -58,7 +57,6 @@ const NavBar = ({
   const { theme, setTheme } = useTheme();
 
   // Varianti i ekranit te vogel (per te vendosur se ku te shfaqet shiriti i kërkimit)
-  // const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Box
