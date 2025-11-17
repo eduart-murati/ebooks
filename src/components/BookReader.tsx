@@ -1,11 +1,12 @@
-import { Box, CloseButton } from "@chakra-ui/react";
+import { Box, CloseButton, Text } from "@chakra-ui/react";
 
 interface BookReaderProps {
   url: string;
   onClose: () => void;
+  bookTitle?: string; // opsionale, për të shfaqur titullin
 }
 
-const BookReader = ({ url, onClose }: BookReaderProps) => {
+const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {
   return (
     <Box
       position="fixed"
@@ -28,6 +29,7 @@ const BookReader = ({ url, onClose }: BookReaderProps) => {
         shadow="lg"
         bg="gray.900"
       >
+        {/* Butoni Close */}
         <CloseButton
           position="absolute"
           top={2}
@@ -37,11 +39,36 @@ const BookReader = ({ url, onClose }: BookReaderProps) => {
           color="white"
           size="lg"
         />
+
+        {/* Bar me titullin e librit */}
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          w="100%"
+          h="50px"
+          bg="gray.900"
+          zIndex={5}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          px={4}
+        >
+          <Text
+            color="white"
+            fontWeight="bold"
+            fontSize={{ base: "md", md: "lg" }}
+          >
+            {bookTitle || "Libri juaj"}
+          </Text>
+        </Box>
+
+        {/* Iframe */}
         <iframe
           src={url}
           width="100%"
           height="100%"
-          style={{ border: "none" }}
+          style={{ border: "none", zIndex: 1 }}
           title="Book Reader"
           allow="autoplay; fullscreen"
           allowFullScreen

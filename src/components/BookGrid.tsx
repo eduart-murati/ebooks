@@ -77,7 +77,14 @@ const BookGrid = ({ bookQuery, page, setPage, onSelectBook }: Props) => {
 
       {/* BookReader overlay */}
       {readerUrl && (
-        <BookReader url={readerUrl} onClose={() => setReaderUrl(null)} />
+        <BookReader
+          url={readerUrl}
+          onClose={() => setReaderUrl(null)}
+          bookTitle={
+            books.find((b) => b.readUrl === readerUrl)?.title ||
+            "Libri i zgjedhur"
+          }
+        />
       )}
     </>
   );

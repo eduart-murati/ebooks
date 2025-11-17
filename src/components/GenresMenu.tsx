@@ -103,7 +103,11 @@ export default function GenresMenu({
   return (
     <Menu.Root onSelect={(e: any) => e.preventDefault()}>
       <MenuTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button
+          size="sm"
+          variant="outline"
+          height={{ base: "36px", md: "40px" }}
+        >
           <FaBars style={{ marginRight: 6 }} />
           {selectedGenre
             ? translations[selectedGenre.name] || selectedGenre.name

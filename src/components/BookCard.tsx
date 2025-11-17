@@ -54,7 +54,7 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
             {book.author || "Autor i panjohur"}
           </Text>
 
-          <HStack gap={1} pt={2}>
+          <HStack gap={1} pt={2} justify="space-between" width="100%">
             <Button colorScheme="blue" size="xs" onClick={onClickDetails}>
               Detaje
             </Button>
