@@ -120,8 +120,8 @@ export default function GenresMenu({
           <MenuContent
             bg={
               colorMode === "dark"
-                ? "rgba(26,32,44,0.30)"
-                : "rgba(255,255,255,0.30)"
+                ? "rgba(26,32,44,0.50)"
+                : "rgba(255,255,255,0.50)"
             } // transparencë 30%
             borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
             minW={{ base: "170px", md: "200px" }} // ngushtohet në mobile
