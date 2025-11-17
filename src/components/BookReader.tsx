@@ -1,4 +1,4 @@
-import { Box, CloseButton, Text, IconButton, Button } from "@chakra-ui/react";
+import { Box, CloseButton, Text, Button } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
 
 interface BookReaderProps {
