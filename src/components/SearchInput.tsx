@@ -1,4 +1,3 @@
-// components/SearchInput.tsx
 import { useRef } from "react";
 import type { ChangeEvent } from "react";
 
@@ -32,6 +31,23 @@ const SearchIcon = () => (
   </svg>
 );
 
+// Ikona për butonin X
+const ClearIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    stroke="currentColor"
+    strokeWidth="2"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
 const SearchInput = ({ searchText, onSearchChange, onSearchSubmit }: Props) => {
   const ref = useRef<HTMLInputElement>(null);
 
@@ -43,11 +59,9 @@ const SearchInput = ({ searchText, onSearchChange, onSearchSubmit }: Props) => {
       }}
       style={{ width: "100%", position: "relative" }}
     >
-      {/* Imitimi i InputGroup */}
       <div style={{ position: "relative", width: "100%" }}>
         <SearchIcon />
 
-        {/* Inputi me stilim për t'u dukur si Chakra UI Input */}
         <input
           value={searchText ?? ""}
           ref={ref}
@@ -57,13 +71,39 @@ const SearchInput = ({ searchText, onSearchChange, onSearchSubmit }: Props) => {
           placeholder="Kërko libra..."
           style={{
             width: "100%",
-            borderRadius: "999px", // full
-            padding: "8px 16px 8px 40px", // Hapesirë për ikonën
+            borderRadius: "999px",
+            padding: "8px 40px 8px 40px", // hapësirë për ikonat
             border: "1px solid #D1D5DB",
-            backgroundColor: "#F3F4F6", // Ngjyrë sfondi e lehtë
+            backgroundColor: "#F3F4F6",
             color: "#1F2937",
           }}
         />
+
+        {searchText && (
+          <button
+            type="button"
+            onClick={() => {
+              onSearchChange("");
+              ref.current?.focus();
+            }}
+            style={{
+              position: "absolute",
+              right: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: "#6B7280",
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ClearIcon />
+          </button>
+        )}
       </div>
     </form>
   );
