@@ -9,6 +9,7 @@ export interface BookQuery {
 }
 
 export interface Book {
+  audioUrl: string | undefined;
   id: string;
   title: string;
   cover_url: string;
@@ -79,6 +80,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
         release_date: doc.first_publish_year?.toString(),
         hasOnlineRead: !!readUrl,
         readUrl,
+        audioUrl: undefined,
       };
     }) || [];
 

@@ -107,8 +107,17 @@ export default function GenresMenu({
           size="sm"
           variant="outline"
           height={{ base: "36px", md: "40px" }}
+          color={colorMode === "dark" ? "whiteAlpha.900" : "gray.800"} // Teksti i dukshëm
+          _hover={{
+            bg: colorMode === "dark" ? "gray.700" : "gray.100",
+          }}
         >
-          <FaBars style={{ marginRight: 6 }} />
+          <FaBars
+            style={{
+              marginRight: 6,
+              color: colorMode === "dark" ? "whiteAlpha.900" : "gray.800",
+            }}
+          />
           {selectedGenre
             ? translations[selectedGenre.name] || selectedGenre.name
             : "Të gjithë"}

@@ -14,7 +14,8 @@ interface Props {
 }
 
 const BookGrid = ({ bookQuery, page, setPage, onSelectBook }: Props) => {
-  const [readerUrl, setReaderUrl] = useState<string | null>(null);
+  // 1. Ruajme te gjithe objektin e librit ne vend te vetëm
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
   const {
     data: books,
@@ -46,7 +47,7 @@ const BookGrid = ({ bookQuery, page, setPage, onSelectBook }: Props) => {
               onClickDetails={() => onSelectBook(book.id)}
               onClickRead={
                 book.hasOnlineRead && book.readUrl
-                  ? () => setReaderUrl(book.readUrl!)
+                  ? () => setSelectedBook(book) // Ruajmë objektin e librit
                   : undefined
               }
             />
@@ -78,14 +79,12 @@ const BookGrid = ({ bookQuery, page, setPage, onSelectBook }: Props) => {
       )}
 
       {/* BookReader overlay */}
-      {readerUrl && (
+      {selectedBook && (
         <BookReader
-          url={readerUrl}
-          onClose={() => setReaderUrl(null)}
-          bookTitle={
-            books.find((b) => b.readUrl === readerUrl)?.title ||
-            "Libri i zgjedhur"
-          }
+          url={selectedBook.readUrl!}
+          audioUrl={selectedBook.audioUrl}
+          onClose={() => setSelectedBook(null)} // Mbyllja rivendos në null (ben unmount)
+          bookTitle={selectedBook.title}
         />
       )}
     </>
