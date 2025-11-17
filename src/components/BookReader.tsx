@@ -1,4 +1,4 @@
-import { Box, CloseButton, Text, Button } from "@chakra-ui/react";
+import { Box, CloseButton, Text, IconButton } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
 
 interface BookReaderProps {
@@ -31,18 +31,7 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
         shadow="lg"
         bg="gray.900"
       >
-        {/* Close */}
-        <CloseButton
-          position="absolute"
-          top={2}
-          right={2}
-          zIndex={50}
-          onClick={onClose}
-          color="white"
-          size="lg"
-        />
-
-        {/* TOP BAR */}
+        {/* Header bar */}
         <Box
           position="absolute"
           top={0}
@@ -50,53 +39,64 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
           w="100%"
           h="50px"
           bg="gray.900"
-          zIndex={40}
+          zIndex={20}
           display="flex"
           alignItems="center"
-          justifyContent="space-between"
-          px={4}
+          justifyContent="center"
+          px={12}
         >
-          <Text color="white" fontWeight="bold" fontSize="lg" truncate>
+          <Text
+            color="white"
+            fontWeight="bold"
+            fontSize={{ base: "md", md: "lg" }}
+            truncate
+            textAlign="center"
+            w="100%"
+          >
             {bookTitle || "Libri juaj"}
           </Text>
-
-          {audioUrl && (
-            <Button
-              aria-label="Play audio"
-              colorScheme="blue"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                const audio = new Audio(audioUrl);
-                audio.play();
-              }}
-            >
-              <FaVolumeUp />
-            </Button>
-          )}
         </Box>
 
-        {/*
-          OVERLAY që mbyll titullin e reader-it brenda iframe
-          -> është shumë i rëndësishëm
-        */}
-        <Box
+        {/* Close button */}
+        <CloseButton
           position="absolute"
-          top="50px"
-          left={0}
-          w="100%"
-          h="40px"
-          bg="gray.900"
+          top={2}
+          right={2}
           zIndex={30}
+          onClick={onClose}
+          color="white"
+          size="lg"
         />
 
-        {/* IFRAME */}
+        {/* Audio button pranë X */}
+        {audioUrl && (
+          <IconButton
+            aria-label="Play audio"
+            {...(<FaVolumeUp />)}
+            colorScheme="blue"
+            variant="outline"
+            size="sm"
+            position="absolute"
+            top={2}
+            right="50px"
+            zIndex={30}
+            onClick={() => {
+              const audio = new Audio(audioUrl);
+              audio.play();
+            }}
+          />
+        )}
+
+        {/* Iframe me offset për header */}
         <iframe
           src={url}
           width="100%"
           height="100%"
-          style={{ border: "none" }}
-          title=" "
+          style={{
+            border: "none",
+            paddingTop: "50px",
+          }}
+          title="Book Reader"
           allow="autoplay; fullscreen"
           allowFullScreen
         />
