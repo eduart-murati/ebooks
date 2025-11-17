@@ -1,14 +1,19 @@
-import { Box, CloseButton, Text, IconButton } from "@chakra-ui/react";
+import { Box, CloseButton, Icon, Text } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
 
 interface BookReaderProps {
   url: string;
   onClose: () => void;
-  bookTitle?: string;
   audioUrl?: string;
+  bookTitle?: string;
 }
 
-const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
+const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
+  // Lartesia e Header-it tone
+  const HEADER_HEIGHT = "50px";
+  // Modifikimi i URL-se mbetet, perdoret per te siguruar mode/2
+  const modifiedUrl = url.includes("#mode/2") ? url : `${url}#mode/2`;
+
   return (
     <Box
       position="fixed"
@@ -31,70 +36,87 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
         shadow="lg"
         bg="gray.900"
       >
-        {/* Header bar */}
+        {/* Header-i yne  */}
         <Box
           position="absolute"
           top={0}
           left={0}
           w="100%"
-          h="50px"
-          bg="gray.900"
-          zIndex={20}
+          h={HEADER_HEIGHT}
+          bg="gray.900" // Ngjyra per te mbuluar toolbar-in
+          zIndex={40} // Mbulon zone e OpenLibrary
           display="flex"
           alignItems="center"
           justifyContent="center"
-          px={12}
         >
+          {/* Titulli yne */}
           <Text
             color="white"
             fontWeight="bold"
             fontSize={{ base: "md", md: "lg" }}
-            truncate
+            maxW="70%"
+            whiteSpace="nowrap" // Mban gjithçka ne nje rresht
+            overflow="hidden"
+            textOverflow="ellipsis" // Shton '...'
             textAlign="center"
-            w="100%"
           >
-            {bookTitle || "Libri juaj"}
+            {bookTitle || "Libri i zgjedhur"}
           </Text>
         </Box>
 
-        {/* Close button */}
+        {/* Butonat (Close dhe Audio) mbi Header */}
         <CloseButton
           position="absolute"
           top={2}
           right={2}
-          zIndex={30}
+          zIndex={50} // Me i larte se mbulesa (40)
           onClick={onClose}
           color="white"
           size="lg"
         />
 
-        {/* Audio button pranë X */}
         {audioUrl && (
-          <IconButton
+          <Box
             aria-label="Play audio"
-            {...(<FaVolumeUp />)}
-            colorScheme="blue"
-            variant="outline"
-            size="sm"
-            position="absolute"
-            top={2}
-            right="50px"
-            zIndex={30}
             onClick={() => {
               const audio = new Audio(audioUrl);
               audio.play();
             }}
-          />
+            as="button"
+            border="1px solid"
+            borderColor="blue.500"
+            color="blue.500"
+            borderRadius="md"
+            p={1}
+            w="32px"
+            h="32px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bg="transparent"
+            cursor="pointer"
+            transition="all 0.2s"
+            _hover={{
+              bg: "blue.500",
+              color: "white",
+            }}
+            position="absolute"
+            top="8px"
+            right="50px"
+            zIndex={50} // Me i lartë se mbulesa (40)
+          >
+            <Icon as={FaVolumeUp} color="inherit" boxSize="1em" />
+          </Box>
         )}
 
-        {/* Iframe me offset për header */}
+        {/* Iframe e OpenLibrary */}
         <iframe
-          src={url}
+          src={modifiedUrl}
           width="100%"
-          height="100%"
+          height="100%" // Iframe merr lartesine 100%
           style={{
             border: "none",
-            paddingTop: "50px",
+            // Heqim te gjitha stilet e pozicionimit
           }}
           title="Book Reader"
           allow="autoplay; fullscreen"
