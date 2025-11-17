@@ -1,12 +1,14 @@
-import { Box, CloseButton, Text } from "@chakra-ui/react";
+import { Box, CloseButton, Text, IconButton, Button } from "@chakra-ui/react";
+import { FaVolumeUp } from "react-icons/fa";
 
 interface BookReaderProps {
   url: string;
   onClose: () => void;
-  bookTitle?: string; // opsionale, per titullin
+  bookTitle?: string; // opsionale
+  audioUrl?: string; // opsionale për audio
 }
 
-const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {
+const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
   return (
     <Box
       position="fixed"
@@ -40,7 +42,7 @@ const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {
           size="lg"
         />
 
-        {/* Bar me titullin e librit */}
+        {/* Bar me titullin e librit dhe audio button */}
         <Box
           position="absolute"
           top={0}
@@ -51,7 +53,7 @@ const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {
           zIndex={5}
           display="flex"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="space-between"
           px={4}
         >
           <Text
@@ -61,6 +63,21 @@ const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {
           >
             {bookTitle || "Libri juaj"}
           </Text>
+
+          {audioUrl && (
+            <Button
+              aria-label="Play audio"
+              colorScheme="blue"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const audio = new Audio(audioUrl);
+                audio.play();
+              }}
+            >
+              <FaVolumeUp />
+            </Button>
+          )}
         </Box>
 
         {/* Iframe */}
