@@ -1,5 +1,6 @@
 import { Box, CloseButton, Text, Button } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
+import { useRef, useEffect } from "react";
 
 interface BookReaderProps {
   url: string;
@@ -9,6 +10,33 @@ interface BookReaderProps {
 }
 
 const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Stop audio dhe iframe kur komponenti mbyllet
+  useEffect(() => {
+    return () => {
+      // Stop audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      // Stop iframe
+      if (iframeRef.current) {
+        iframeRef.current.src = "";
+      }
+    };
+  }, []);
+
+  const handlePlayAudio = () => {
+    if (audioUrl) {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(audioUrl);
+      }
+      audioRef.current.play();
+    }
+  };
+
   return (
     <Box
       position="fixed"
@@ -70,10 +98,7 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
               colorScheme="blue"
               variant="outline"
               size="sm"
-              onClick={() => {
-                const audio = new Audio(audioUrl);
-                audio.play();
-              }}
+              onClick={handlePlayAudio}
             >
               <FaVolumeUp />
             </Button>
@@ -82,6 +107,7 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
 
         {/* Iframe */}
         <iframe
+          ref={iframeRef}
           src={url}
           width="100%"
           height="100%"
