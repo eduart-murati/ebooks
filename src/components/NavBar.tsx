@@ -1,4 +1,3 @@
-// components/NavBar.tsx
 import { HStack, Image, Button, Box, Text } from "@chakra-ui/react";
 import { useTheme } from "next-themes";
 import logo_light from "../assets/logo_light.svg";
@@ -50,7 +49,7 @@ const NavBar = ({
 
   return (
     <Box
-      w="100%" // Wideness e rregulluar
+      w="100%" // gjeresia 100%
       py={2}
       px={{ base: 4, md: 8 }} // Padding responsiv
       bg={theme === "dark" ? "gray.800" : "white"}
@@ -59,14 +58,14 @@ const NavBar = ({
       top={0}
       zIndex={100}
     >
-      {/* Rreshti i Parë (Logo, Search/Desktop, Buttons) */}
+      {/* Rreshti i pare i menuve */}
       <HStack
         w="100%"
         align="center"
         gap={{ base: 2, md: 4 }}
         justify="space-between"
       >
-        {/* Grupi i Majtë: Kthehu + Logo */}
+        {/* Grupi i majte: Kthehu + Logo */}
         <HStack flexShrink={0} gap={2}>
           {isDetailsView && onBack && (
             <Button
@@ -90,12 +89,12 @@ const NavBar = ({
           />
         </HStack>
 
-        {/* Search - Desktop (shfaqet vetëm në ekrane të mëdha, zë hapësirën e mbetur) */}
+        {/* Search - Desktop */}
         <Box
           flex="1"
           maxW="600px"
           mx={{ base: 0, md: 4 }}
-          display={{ base: "none", md: "block" }} // Fshihet në mobile
+          display={{ base: "none", md: "block" }} // jo per mob
         >
           <SearchInput
             searchText={searchText}
@@ -104,7 +103,7 @@ const NavBar = ({
           />
         </Box>
 
-        {/* Grupi i Djathtë: Genres + Theme Toggle */}
+        {/* Grupi i djathte: Genres + Theme Toggle */}
         <HStack gap={2} flexShrink={0}>
           <GenresMenu
             genres={genres}
@@ -121,11 +120,11 @@ const NavBar = ({
         </HStack>
       </HStack>
 
-      {/* Rreshti i Dytë (Search/Mobile) */}
-      {/* Shiriti i kërkimit për Mobile shfaqet në një rresht tjetër, poshtë HStack-ut kryesor */}
+      {/* Rreshti i dyte (Search/Mobile) */}
+      {/* Shiriti i kerkimit per mobile shfaqet ne nje rresht tjeter */}
       <Box
         display={{ base: "block", md: "none" }} // Shfaqet vetëm në mobile
-        mt={2} // Hapësirë lart
+        mt={2} // Hapësire lart
       >
         <SearchInput
           searchText={searchText}

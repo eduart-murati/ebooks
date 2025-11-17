@@ -7,7 +7,7 @@ interface Props {
   onSearchSubmit: (value: string) => void;
 }
 
-// Zëvendësues për ikonën e kërkimit
+// Zevendesues per ikonen e kerkimit
 const SearchIcon = () => (
   <svg
     viewBox="0 0 24 24"
@@ -31,7 +31,7 @@ const SearchIcon = () => (
   </svg>
 );
 
-// Ikona për butonin X
+// Ikona per butonin X
 const ClearIcon = () => (
   <svg
     viewBox="0 0 24 24"
@@ -72,7 +72,7 @@ const SearchInput = ({ searchText, onSearchChange, onSearchSubmit }: Props) => {
           style={{
             width: "100%",
             borderRadius: "999px",
-            padding: "8px 40px 8px 40px", // hapësirë për ikonat
+            padding: "8px 40px 8px 40px", // hapësire per ikonat
             border: "1px solid #D1D5DB",
             backgroundColor: "#F3F4F6",
             color: "#1F2937",

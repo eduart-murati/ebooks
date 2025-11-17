@@ -5,7 +5,6 @@ const BookCardSkeleton = () => {
     <Card.Root>
       <Skeleton height="450px">
         {" "}
-        {/* librat zakonisht nuk kanë 600px si filmat */}
         <CardBody>
           <SkeletonText mt="4" noOfLines={3} gap="3" />
         </CardBody>

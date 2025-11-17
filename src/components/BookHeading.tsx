@@ -1,9 +1,8 @@
 import type { BookQuery } from "../hooks/useBooks";
 import { Heading } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
-// Importi i useColorModeValue u rregullua, duke e marrë nga @chakra-ui/react
 
-// Përkthimet në shqip (Shtuar 'All')
+// Perkthimet ne shqip (shtuar 'All')
 const genreTranslations: Record<string, string> = {
   All: "Të Gjithë",
   "Science Fiction": "Shkencorë",
@@ -25,19 +24,18 @@ interface Props {
 const BookHeading = ({ bookQuery }: Props) => {
   const textColor = useColorModeValue("gray.700", "white");
 
-  // 1. Përcakto Baza (Zhanri i zgjedhur ose 'All')
-  // Nëse s'ka zhanër, nënkuptohet që jemi te 'All'
+  // Percakto Bazen (zhanri i zgjedhur ose 'All')
   const baseGenreName = bookQuery.genre?.name || "All";
   const translatedGenre = genreTranslations[baseGenreName] || baseGenreName;
 
-  // 2. Krijimi i titullit (Heading)
+  // Krijimi i titullit (Heading)
   let headingText = "";
 
   if (bookQuery.searchText) {
-    // Nëse ka kërkim (Search Text)
+    // Nese ka kerkim (Search Text)
     headingText = `Rezultatet për: "${bookQuery.searchText}"`;
   } else {
-    // Nëse s'ka kërkim, shfaqim zhanrin (ose 'Të Gjitha')
+    // Nese s'ka kerkim, shfaqim zhanrin (ose 'Të Gjithe librat')
     headingText = `Librat: ${translatedGenre}`;
   }
 

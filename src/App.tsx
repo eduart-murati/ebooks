@@ -58,7 +58,7 @@ function App() {
           lg: showAside ? "200px 1fr" : "1fr",
         }}
         minH="100vh"
-        pt={2} // hapësirë nën Navbar
+        pt={1} // hapesirë nen Navbar
       >
         {showAside && genres && (
           <GridItem area="aside" padding={5}>
@@ -77,9 +77,9 @@ function App() {
             <BookDetails bookId={selectedBookKey} onBack={handleBackToHome} />
           ) : (
             <>
-              {/* Shfaqet vetëm në desktop */}
+              {/* Shfaqet vetem ne desktop */}
               {showHeading && (
-                <HStack gap={5} marginBottom={1} paddingX={5}>
+                <HStack gap={5} marginBottom={0.5} paddingX={5}>
                   <BookHeading bookQuery={bookQuery} />
                 </HStack>
               )}

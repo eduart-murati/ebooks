@@ -14,7 +14,7 @@ export interface Book {
   cover_url: string;
   author?: string;
   release_date?: string;
-  hasOnlineRead?: boolean; // Flag për Lexo / Audio
+  hasOnlineRead?: boolean; // Flag per Lexo / Audio
   readUrl?: string | null;  // Link i leximit online
 }
 
@@ -63,7 +63,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
       );
       const dynamicPlaceholderUrl = `https://placehold.co/200x300/4F46E5/FFFFFF?text=${placeholderText}`;
 
-      // Kontroll për lexim online ose audio nga Internet Archive
+      // Kontroll per lexim online ose audio nga internet archive
       let readUrl: string | null = null;
       if (doc.ia?.length > 0) {
         readUrl = `https://archive.org/embed/${doc.ia[0]}?ui=embed&bgcolor=000000&color=ffffff&controls=1`;

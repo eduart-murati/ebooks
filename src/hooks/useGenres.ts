@@ -19,7 +19,7 @@ const GENRES: Genre[] = [
 ];
 
 const useBookGenres = () => {
-  // Për momentin nuk ka fetch, gjithçka është statike
+  // nuk ka fetch, eshte statike
   const data = GENRES;
   const error = null;
   const isLoading = false;

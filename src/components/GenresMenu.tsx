@@ -89,7 +89,7 @@ export default function GenresMenu({
   // Krijimi i objektit "All"
   const allGenre: Genre = { id: "all" as any, name: "All" } as Genre;
 
-  // Filtrimi i kategorive që ekzistojnë në genreOrder
+  // Filtrimi i kategorive
   const filteredGenres = genres.filter((g) => genreOrder.includes(g.name));
 
   // Kombinimi me "All"
@@ -122,9 +122,9 @@ export default function GenresMenu({
               colorMode === "dark"
                 ? "rgba(26,32,44,0.50)"
                 : "rgba(255,255,255,0.50)"
-            } // transparencë 30%
+            } // transparencë 50%
             borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
-            minW={{ base: "170px", md: "200px" }} // ngushtohet në mobile
+            minW={{ base: "170px", md: "200px" }} // gjeresia e listes mob & desk
             p={2}
             borderRadius="md"
             style={{
@@ -142,7 +142,7 @@ export default function GenresMenu({
                   value={genre.name}
                   onSelect={() => onSelectGenre(genre)}
                   fontWeight={isSelected ? "bold" : "normal"}
-                  fontSize={{ base: "md", md: "md" }} // font më i madh në mobile
+                  fontSize={{ base: "md", md: "md" }} // font per mob & desk
                   color={
                     isSelected
                       ? colorMode === "dark"

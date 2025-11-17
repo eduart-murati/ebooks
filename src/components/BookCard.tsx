@@ -31,7 +31,7 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
           objectFit={isCoverAvailable ? "cover" : "contain"}
           boxSize={isCoverAvailable ? "auto" : "50%"}
           p={isCoverAvailable ? 0 : 4}
-          // 🔥 KLIKU E IMAZHIT HAP DETAJET
+          // Klik ne imazh per te hapur detajet
           cursor="pointer"
           _hover={{ transform: "scale(1.03)", transition: "0.2s" }}
           onClick={onClickDetails}

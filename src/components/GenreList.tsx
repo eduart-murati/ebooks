@@ -72,7 +72,7 @@ interface Props {
   onSelectGenre: (genre: Genre) => void;
   selectedGenre: Genre | null;
   genres: Genre[];
-  isDarkMode?: boolean; // vendos manualisht dark ose light
+  isDarkMode?: boolean;
   isVisible?: boolean;
 }
 
@@ -86,9 +86,8 @@ const GenreList = ({
   const selectedColor = isDarkMode ? "blue.300" : "blue.500";
   const defaultColor = isDarkMode ? "gray.400" : "gray.600";
 
-  // Ngjyrat e sfondit me alpha (transparencë) të Chakra UI
+  // Ngjyrat e sfondit me alpha (transparence) te Chakra UI
   const transparentBg = isDarkMode ? "blackAlpha.600" : "whiteAlpha.800";
-
   const hoverBg = isDarkMode ? "whiteAlpha.100" : "blackAlpha.50";
 
   if (!genres) return <Spinner />;
@@ -106,7 +105,7 @@ const GenreList = ({
 
   return (
     <Box position="relative">
-      {/* Titulli i Listës me madhësi të zvogëluar */}
+      {/* Titulli i Listes me madhesi te zvogeluar */}
       <Heading fontSize={{ base: "xl", lg: "2xl" }} mb={3}>
         Të gjithë
       </Heading>
@@ -145,7 +144,7 @@ const GenreList = ({
                 whiteSpace="normal"
                 fontWeight={isSelected ? "bold" : "normal"}
                 color={isSelected ? selectedColor : defaultColor}
-                // FUNKSIONALITETI I KLIKIMIT KORREKT
+                // Funksionaliteti i klikimit
                 onClick={() => onSelectGenre(genre)}
                 fontSize={{ base: "md", lg: "lg" }}
                 variant="ghost"

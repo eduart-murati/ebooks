@@ -3,7 +3,7 @@ import { Box, CloseButton, Text } from "@chakra-ui/react";
 interface BookReaderProps {
   url: string;
   onClose: () => void;
-  bookTitle?: string; // opsionale, për të shfaqur titullin
+  bookTitle?: string; // opsionale, per titullin
 }
 
 const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {

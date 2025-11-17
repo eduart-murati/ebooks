@@ -6,7 +6,7 @@ interface Props {
 }
 
 const BookStarRating = ({ rating }: Props) => {
-  const maxRating = 5; // ndryshuar sipas shkallës së librave
+  const maxRating = 5;
   const numStars = 5;
   const normalizedRating = (rating / maxRating) * numStars;
   const stars = [];
