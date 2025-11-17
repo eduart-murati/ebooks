@@ -1,6 +1,5 @@
 import { Box, CloseButton, Text, Button } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
-import { useRef } from "react";
 
 interface BookReaderProps {
   url: string;
@@ -10,32 +9,6 @@ interface BookReaderProps {
 }
 
 const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const handlePlayAudio = () => {
-    if (!audioUrl) return;
-
-    // ndalojmë audio ekzistuese nëse ekziston
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
-    const audio = new Audio(audioUrl);
-    audioRef.current = audio;
-    audio.play();
-  };
-
-  const handleClose = () => {
-    // ndalimi i audios kur mbyllet reader
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
-    onClose();
-  };
-
   return (
     <Box
       position="fixed"
@@ -58,18 +31,18 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
         shadow="lg"
         bg="gray.900"
       >
-        {/* Close button */}
+        {/* Close */}
         <CloseButton
           position="absolute"
           top={2}
           right={2}
-          zIndex={10}
-          onClick={handleClose}
+          zIndex={50}
+          onClick={onClose}
           color="white"
           size="lg"
         />
 
-        {/* Top Bar */}
+        {/* TOP BAR */}
         <Box
           position="absolute"
           top={0}
@@ -77,18 +50,13 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
           w="100%"
           h="50px"
           bg="gray.900"
-          zIndex={5}
+          zIndex={40}
           display="flex"
           alignItems="center"
           justifyContent="space-between"
           px={4}
         >
-          <Text
-            color="white"
-            fontWeight="bold"
-            fontSize={{ base: "md", md: "lg" }}
-            truncate
-          >
+          <Text color="white" fontWeight="bold" fontSize="lg" truncate>
             {bookTitle || "Libri juaj"}
           </Text>
 
@@ -98,20 +66,37 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
               colorScheme="blue"
               variant="outline"
               size="sm"
-              onClick={handlePlayAudio}
+              onClick={() => {
+                const audio = new Audio(audioUrl);
+                audio.play();
+              }}
             >
               <FaVolumeUp />
             </Button>
           )}
         </Box>
 
-        {/* Iframe */}
+        {/*
+          OVERLAY që mbyll titullin e reader-it brenda iframe
+          -> është shumë i rëndësishëm
+        */}
+        <Box
+          position="absolute"
+          top="50px"
+          left={0}
+          w="100%"
+          h="40px"
+          bg="gray.900"
+          zIndex={30}
+        />
+
+        {/* IFRAME */}
         <iframe
           src={url}
           width="100%"
           height="100%"
-          style={{ border: "none", zIndex: 1 }}
-          title=" " // fshihet titulli i iframe që e sillte reader-i
+          style={{ border: "none" }}
+          title=" "
           allow="autoplay; fullscreen"
           allowFullScreen
         />
