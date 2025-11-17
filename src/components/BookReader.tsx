@@ -1,5 +1,6 @@
 import { Box, CloseButton, Text, Button } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
+import { useRef } from "react";
 
 interface BookReaderProps {
   url: string;
@@ -9,6 +10,32 @@ interface BookReaderProps {
 }
 
 const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlayAudio = () => {
+    if (!audioUrl) return;
+
+    // ndalojmë audio ekzistuese nëse ekziston
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+    audio.play();
+  };
+
+  const handleClose = () => {
+    // ndalimi i audios kur mbyllet reader
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    onClose();
+  };
+
   return (
     <Box
       position="fixed"
@@ -31,26 +58,26 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
         shadow="lg"
         bg="gray.900"
       >
-        {/* Butoni Close */}
+        {/* Close button */}
         <CloseButton
           position="absolute"
           top={2}
           right={2}
           zIndex={10}
-          onClick={onClose}
+          onClick={handleClose}
           color="white"
           size="lg"
         />
 
-        {/* Bar me titullin dhe audio button */}
+        {/* Top Bar */}
         <Box
           position="absolute"
           top={0}
           left={0}
           w="100%"
-          h={{ base: "60px", md: "50px" }} // me i dukshem ne mobile
+          h="50px"
           bg="gray.900"
-          zIndex={20} // mbi iframe
+          zIndex={5}
           display="flex"
           alignItems="center"
           justifyContent="space-between"
@@ -62,7 +89,7 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
             fontSize={{ base: "md", md: "lg" }}
             truncate
           >
-            {bookTitle || "Libri i zgjedhur"}
+            {bookTitle || "Libri juaj"}
           </Text>
 
           {audioUrl && (
@@ -71,27 +98,20 @@ const BookReader = ({ url, onClose, bookTitle, audioUrl }: BookReaderProps) => {
               colorScheme="blue"
               variant="outline"
               size="sm"
-              onClick={() => {
-                const audio = new Audio(audioUrl);
-                audio.play();
-              }}
+              onClick={handlePlayAudio}
             >
               <FaVolumeUp />
             </Button>
           )}
         </Box>
 
-        {/* Iframe me padding-top per te mos mbuluar bar-in */}
+        {/* Iframe */}
         <iframe
           src={url}
           width="100%"
           height="100%"
-          style={{
-            border: "none",
-            zIndex: 1,
-            paddingTop: "60px", // ose margin-top
-          }}
-          title="Book Reader"
+          style={{ border: "none", zIndex: 1 }}
+          title=" " // fshihet titulli i iframe që e sillte reader-i
           allow="autoplay; fullscreen"
           allowFullScreen
         />
