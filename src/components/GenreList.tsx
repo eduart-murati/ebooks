@@ -40,7 +40,7 @@ const genreIconMap: Record<string, IconType> = {
 
 // Përkthimet
 const genreTranslations: Record<string, string> = {
-  All: "Të Gjitha",
+  All: "Të gjithë",
   "Science Fiction": "Shkencor",
   Fantasy: "Fantazi",
   Romance: "Romancë",
@@ -108,7 +108,7 @@ const GenreList = ({
     <Box position="relative">
       {/* Titulli i Listës me madhësi të zvogëluar */}
       <Heading fontSize={{ base: "xl", lg: "2xl" }} mb={3}>
-        Kategoritë
+        Të gjithë
       </Heading>
 
       <VStack

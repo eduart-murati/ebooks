@@ -23,13 +23,7 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
   const imageUrl = isCoverAvailable ? book.cover_url : NO_IMAGE_URL;
 
   return (
-    <Card.Root
-      _hover={{
-        transform: "scale(1.03)",
-        transition: "0.2s",
-        cursor: "pointer",
-      }}
-    >
+    <Card.Root>
       <AspectRatio ratio={2 / 3}>
         <Image
           src={imageUrl}
@@ -37,29 +31,34 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
           objectFit={isCoverAvailable ? "cover" : "contain"}
           boxSize={isCoverAvailable ? "auto" : "50%"}
           p={isCoverAvailable ? 0 : 4}
+          // 🔥 KLIKU E IMAZHIT HAP DETAJET
+          cursor="pointer"
+          _hover={{ transform: "scale(1.03)", transition: "0.2s" }}
+          onClick={onClickDetails}
         />
       </AspectRatio>
 
       <CardBody p={3}>
-        {" "}
-        {/* Zvogëlimi i padding-ut të CardBody */}
         <VStack align="flex-start" gap={0}>
-          {" "}
-          {/* Zvogëlimi i ndarjes (gap) */}
-          <Text lineClamp={2} fontSize="lg" fontWeight="bold">
-            {" "}
-            {/* Zvogëlimi i titullit */}
+          <Text
+            lineClamp={2}
+            fontSize="lg"
+            fontWeight="bold"
+            cursor="pointer"
+            onClick={onClickDetails}
+          >
             {book.title}
           </Text>
+
           <Text fontSize="sm" color="gray.500">
             {book.author || "Autor i panjohur"}
           </Text>
+
           <HStack gap={1} pt={2}>
-            {/* Zvogëlimi i butonit në size="xs" */}
             <Button colorScheme="blue" size="xs" onClick={onClickDetails}>
               Detaje
             </Button>
-            {/* Zvogëlimi i butonit në size="xs" */}
+
             <Button
               colorScheme={book.hasOnlineRead ? "purple" : "gray"}
               size="xs"

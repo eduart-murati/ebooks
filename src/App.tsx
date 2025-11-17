@@ -11,6 +11,7 @@ import type { BookQuery } from "./hooks/useBooks";
 
 function App() {
   const showAside = useBreakpointValue({ lg: true });
+  const showHeading = useBreakpointValue({ base: false, lg: true });
 
   const [searchText, setSearchText] = useState("");
   const [bookQuery, setBookQuery] = useState<BookQuery>({
@@ -77,7 +78,7 @@ function App() {
           ) : (
             <>
               {/* Shfaqet vetëm në desktop */}
-              {useBreakpointValue({ base: false, lg: true }) && (
+              {showHeading && (
                 <HStack gap={5} marginBottom={1} paddingX={5}>
                   <BookHeading bookQuery={bookQuery} />
                 </HStack>

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Button,
   Menu,
@@ -7,13 +5,47 @@ import {
   MenuContent,
   MenuItem,
   Portal,
+  HStack,
+  Icon,
+  Box,
 } from "@chakra-ui/react";
-import { FaBars } from "react-icons/fa";
+import {
+  FaBars,
+  FaBook,
+  FaRocket,
+  FaMagic,
+  FaHeart,
+  FaQuestion,
+  FaHistory,
+  FaGhost,
+  FaFeatherAlt,
+  FaChild,
+  FaCrosshairs,
+  FaGlobe,
+} from "react-icons/fa";
+import type { IconType } from "react-icons/lib";
+
 import type { Genre } from "@/hooks/useGenres";
 import { useColorMode } from "./ui/color-mode";
 
+// Ikonat
+const genreIconMap: Record<string, IconType> = {
+  All: FaGlobe,
+  "Science Fiction": FaRocket,
+  Fantasy: FaMagic,
+  Romance: FaHeart,
+  Mystery: FaQuestion,
+  History: FaHistory,
+  Biography: FaFeatherAlt,
+  Horror: FaGhost,
+  Thriller: FaCrosshairs,
+  Children: FaChild,
+  Poetry: FaBook,
+};
+
+// Përkthimet
 const translations: Record<string, string> = {
-  All: "Të Gjitha",
+  All: "Të Gjithë",
   "Science Fiction": "Shkencor",
   Fantasy: "Fantazi",
   Romance: "Romancë",
@@ -46,7 +78,7 @@ export default function GenresMenu({
           <FaBars style={{ marginRight: 6 }} />
           {selectedGenre
             ? translations[selectedGenre.name] || selectedGenre.name
-            : "Kategori"}
+            : "Të gjithë"}
         </Button>
       </MenuTrigger>
 
@@ -55,12 +87,14 @@ export default function GenresMenu({
           <MenuContent
             bg={colorMode === "dark" ? "gray.800" : "white"}
             borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
-            minW="200px"
+            minW="220px"
             p={1}
             borderRadius="md"
           >
             {genres.map((genre) => {
               const isSelected = genre.id === selectedGenre?.id;
+              const IconComp = genreIconMap[genre.name] || FaBook;
+
               return (
                 <MenuItem
                   key={genre.id}
@@ -82,7 +116,22 @@ export default function GenresMenu({
                   px={3}
                   py={2}
                 >
-                  {translations[genre.name] || genre.name}
+                  <HStack gap={3}>
+                    <Icon
+                      as={IconComp}
+                      boxSize="18px"
+                      color={
+                        isSelected
+                          ? colorMode === "dark"
+                            ? "blue.300"
+                            : "blue.600"
+                          : colorMode === "dark"
+                          ? "whiteAlpha.900"
+                          : "gray.700"
+                      }
+                    />
+                    <Box>{translations[genre.name] || genre.name}</Box>
+                  </HStack>
                 </MenuItem>
               );
             })}
