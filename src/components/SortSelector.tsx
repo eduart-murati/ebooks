@@ -9,9 +9,9 @@ interface Props {
 
 const SortSelector = ({ onSelectSortOrder, sortOrder, isDisabled }: Props) => {
   const sortOrders = [
-    { value: "popularity.desc", label: "Më të Lexuarit" },
-    { value: "release_date.desc", label: "Botime të Reja" },
-    { value: "release_date.asc", label: "Botime të Vjetra" },
+    { value: "popularity.desc", label: "Më të lexuarit" },
+    { value: "release_date.desc", label: "Botime të reja" },
+    { value: "release_date.asc", label: "Botime të vjetra" },
     { value: "title.asc", label: "Titulli (A-Z)" },
     { value: "title.desc", label: "Titulli (Z-A)" },
   ];
@@ -24,7 +24,7 @@ const SortSelector = ({ onSelectSortOrder, sortOrder, isDisabled }: Props) => {
     <Menu.Root>
       <Menu.Trigger asChild>
         <Button size="sm" disabled={isDisabled}>
-          Rendit sipas: {currentSortOrder?.label || "Më të Lexurait"}
+          Rendit sipas: {currentSortOrder?.label || "Më të lexuarit"}
           <BsChevronDown />
         </Button>
       </Menu.Trigger>

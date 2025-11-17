@@ -5,7 +5,7 @@ import { useColorModeValue } from "./ui/color-mode";
 
 // Përkthimet në shqip (Shtuar 'All')
 const genreTranslations: Record<string, string> = {
-  All: "Të Gjitha",
+  All: "Të Gjithë",
   "Science Fiction": "Shkencorë",
   Fantasy: "Fantazi",
   Romance: "Romancë",

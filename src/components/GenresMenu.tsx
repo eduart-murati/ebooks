@@ -33,14 +33,14 @@ const genreIconMap: Record<string, IconType> = {
   All: FaGlobe,
   "Science Fiction": FaRocket,
   Fantasy: FaMagic,
+  Children: FaChild,
+  Poetry: FaBook,
   Romance: FaHeart,
   Mystery: FaQuestion,
   History: FaHistory,
   Biography: FaFeatherAlt,
-  Horror: FaGhost,
   Thriller: FaCrosshairs,
-  Children: FaChild,
-  Poetry: FaBook,
+  Horror: FaGhost,
 };
 
 // Përkthimet
@@ -71,6 +71,35 @@ export default function GenresMenu({
 }: Props) {
   const { colorMode } = useColorMode();
 
+  // Renditja sipas GenreList
+  const genreOrder = [
+    "All",
+    "Science Fiction",
+    "Fantasy",
+    "Children",
+    "Poetry",
+    "Romance",
+    "Mystery",
+    "History",
+    "Biography",
+    "Thriller",
+    "Horror",
+  ];
+
+  // Krijimi i objektit "All"
+  const allGenre: Genre = { id: "all" as any, name: "All" } as Genre;
+
+  // Filtrimi i kategorive që ekzistojnë në genreOrder
+  const filteredGenres = genres.filter((g) => genreOrder.includes(g.name));
+
+  // Kombinimi me "All"
+  const combinedGenres: Genre[] = [allGenre, ...filteredGenres];
+
+  // Sortimi sipas genreOrder
+  const sortedGenres = combinedGenres.sort(
+    (a, b) => genreOrder.indexOf(a.name) - genreOrder.indexOf(b.name)
+  );
+
   return (
     <Menu.Root onSelect={(e: any) => e.preventDefault()}>
       <MenuTrigger asChild>
@@ -85,13 +114,21 @@ export default function GenresMenu({
       <Portal>
         <Menu.Positioner>
           <MenuContent
-            bg={colorMode === "dark" ? "gray.800" : "white"}
+            bg={
+              colorMode === "dark"
+                ? "rgba(26,32,44,0.30)"
+                : "rgba(255,255,255,0.30)"
+            } // transparencë 30%
             borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
-            minW="220px"
-            p={1}
+            minW={{ base: "140px", md: "200px" }} // ngushtohet në mobile
+            p={2}
             borderRadius="md"
+            style={{
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
           >
-            {genres.map((genre) => {
+            {sortedGenres.map((genre) => {
               const isSelected = genre.id === selectedGenre?.id;
               const IconComp = genreIconMap[genre.name] || FaBook;
 
@@ -101,6 +138,7 @@ export default function GenresMenu({
                   value={genre.name}
                   onSelect={() => onSelectGenre(genre)}
                   fontWeight={isSelected ? "bold" : "normal"}
+                  fontSize={{ base: "md", md: "md" }} // font më i madh në mobile
                   color={
                     isSelected
                       ? colorMode === "dark"
