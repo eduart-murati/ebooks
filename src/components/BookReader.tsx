@@ -1,5 +1,6 @@
 import { Box, CloseButton, Icon, Text } from "@chakra-ui/react";
 import { FaVolumeUp } from "react-icons/fa";
+import { useRef } from "react";
 
 interface BookReaderProps {
   url: string;
@@ -9,10 +10,34 @@ interface BookReaderProps {
 }
 
 const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
-  // Lartesia e Header-it tone
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const HEADER_HEIGHT = "50px";
-  // Modifikimi i URL-se mbetet, perdoret per te siguruar mode/2
   const modifiedUrl = url.includes("#mode/2") ? url : `${url}#mode/2`;
+
+  const handlePlayAudio = () => {
+    if (!audioUrl) return;
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio(audioUrl);
+    } else {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    audioRef.current.play().catch((e) => console.error(e));
+  };
+
+  const handleClose = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    if (iframeRef.current) {
+      iframeRef.current.src = ""; // ndalon media brenda iframe
+    }
+    onClose();
+  };
 
   return (
     <Box
@@ -36,52 +61,49 @@ const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
         shadow="lg"
         bg="gray.900"
       >
-        {/* Header-i yne  */}
+        {/* Header */}
         <Box
           position="absolute"
           top={0}
           left={0}
           w="100%"
           h={HEADER_HEIGHT}
-          bg="gray.900" // Ngjyra per te mbuluar toolbar-in
-          zIndex={40} // Mbulon zone e OpenLibrary
+          bg="gray.900"
+          zIndex={40}
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
-          {/* Titulli yne */}
           <Text
             color="white"
             fontWeight="bold"
             fontSize={{ base: "md", md: "lg" }}
             maxW="70%"
-            whiteSpace="nowrap" // Mban gjithçka ne nje rresht
+            whiteSpace="nowrap"
             overflow="hidden"
-            textOverflow="ellipsis" // Shton '...'
+            textOverflow="ellipsis"
             textAlign="center"
           >
             {bookTitle || "Libri i zgjedhur"}
           </Text>
         </Box>
 
-        {/* Butonat (Close dhe Audio) mbi Header */}
+        {/* Close */}
         <CloseButton
           position="absolute"
           top={2}
           right={2}
-          zIndex={50} // Me i larte se mbulesa (40)
-          onClick={onClose}
+          zIndex={50}
+          onClick={handleClose}
           color="white"
           size="lg"
         />
 
+        {/* Audio */}
         {audioUrl && (
           <Box
             aria-label="Play audio"
-            onClick={() => {
-              const audio = new Audio(audioUrl);
-              audio.play();
-            }}
+            onClick={handlePlayAudio}
             as="button"
             border="1px solid"
             borderColor="blue.500"
@@ -95,29 +117,23 @@ const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
             justifyContent="center"
             bg="transparent"
             cursor="pointer"
-            transition="all 0.2s"
-            _hover={{
-              bg: "blue.500",
-              color: "white",
-            }}
+            _hover={{ bg: "blue.500", color: "white" }}
             position="absolute"
             top="8px"
             right="50px"
-            zIndex={50} // Me i lartë se mbulesa (40)
+            zIndex={50}
           >
             <Icon as={FaVolumeUp} color="inherit" boxSize="1em" />
           </Box>
         )}
 
-        {/* Iframe e OpenLibrary */}
+        {/* Iframe */}
         <iframe
+          ref={iframeRef}
           src={modifiedUrl}
           width="100%"
-          height="100%" // Iframe merr lartesine 100%
-          style={{
-            border: "none",
-            // Heqim te gjitha stilet e pozicionimit
-          }}
+          height="100%"
+          style={{ border: "none" }}
           title="Book Reader"
           allow="autoplay; fullscreen"
           allowFullScreen
