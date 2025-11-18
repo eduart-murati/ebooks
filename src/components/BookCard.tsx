@@ -9,6 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import type { Book } from "@/hooks/useBooks";
+import no_image from "../assets/no_image.svg";
 
 interface Props {
   book: Book;
@@ -18,9 +19,8 @@ interface Props {
 
 const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
   const isCoverAvailable = !!book.cover_url;
-  const NO_IMAGE_URL =
-    "https://dummyimage.com/200x300/cccccc/000000&text=No+Cover";
-  const imageUrl = isCoverAvailable ? book.cover_url : NO_IMAGE_URL;
+  const NO_IMAGE_URL = no_image;
+  const imageUrl = book.cover_url || NO_IMAGE_URL;
 
   return (
     <Card.Root>
