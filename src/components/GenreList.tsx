@@ -107,7 +107,7 @@ const GenreList = ({
     <Box position="relative">
       {/* Titulli i Listes me madhesi te zvogeluar */}
       <Heading fontSize={{ base: "xl", lg: "2xl" }} mb={3}>
-        Të gjithë
+        Kategoritë
       </Heading>
 
       <VStack
