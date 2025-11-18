@@ -31,10 +31,10 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
           objectFit={isCoverAvailable ? "cover" : "contain"}
           boxSize={isCoverAvailable ? "auto" : "50%"}
           p={isCoverAvailable ? 0 : 4}
-          // Klik ne imazh per te hapur detajet
+          // Klik ne imazh per te lexuar librin
           cursor="pointer"
           _hover={{ transform: "scale(1.03)", transition: "0.2s" }}
-          onClick={onClickDetails}
+          onClick={onClickRead}
         />
       </AspectRatio>
 
