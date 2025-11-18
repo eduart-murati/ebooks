@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# eBook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+eBook is a minimal web application built with **React + TypeScript + Vite** that allows you to search and read books online. It supports searching by **genre**, **author**, and **keywords**, and features a responsive UI built with **Chakra UI**. Books available online can be read directly.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+To get started with eBook, follow these steps:
 
-## React Compiler
+1. **Clone** this repository to your local machine.
+2. Run `npm install` to install all dependencies.
+3. Run `npm run dev` to start the local development server.
+4. Open your browser at [http://localhost:5173](http://localhost:5173) to see the app in action.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Search books by **genre**, **author**, and **keywords**.
+- Display books with cover images, author names, and publication year.
+- **Read / Audio** button for books available online.
+- Responsive UI for desktop and mobile devices.
+- Pagination support for large book lists.
+- Simple, modular, and reusable React components.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **src/components/** – UI components such as `BookCard`, `BookGrid`, `NavBar`.
+- **src/hooks/** – Custom hooks like `useBooks` and `useGenres`.
+- **src/services/** – Functions for fetching API data and data processing.
+- **App.tsx** – Main application entry point.
+- **main.tsx** – Renders React into the DOM.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Learnings
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This project is useful for learning how to:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Build a modern front-end application with React and TypeScript.
+- Manage application **state** using custom hooks.
+- Create reusable and modular React components.
+- Use UI libraries like Chakra UI effectively.
+- Connect front-end apps to external APIs.
+- Apply best practices for clean code and TypeScript.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+eBook is minimal and can be extended further with new features or backend integrations.
