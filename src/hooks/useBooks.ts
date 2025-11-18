@@ -1,3 +1,5 @@
+// useBooks.ts
+
 import useData from "./useData";
 import type { Genre } from "./useGenres";
 
@@ -12,7 +14,7 @@ export interface Book {
   audioUrl: string | undefined;
   id: string;
   title: string;
-  cover_url: string;
+  cover_url: string | null| undefined;
   author?: string;
   release_date?: string;
   hasOnlineRead?: boolean;
@@ -58,12 +60,6 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
 
   const mappedData: Book[] =
     data?.docs?.map((doc) => {
-      const titleSubstring = doc.title.substring(0, 30);
-      const placeholderText = encodeURIComponent(
-        titleSubstring.length < doc.title.length ? titleSubstring + "..." : titleSubstring
-      );
-      const dynamicPlaceholderUrl = `https://placehold.co/200x300/4F46E5/FFFFFF?text=${placeholderText}`;
-
       // Kontroll per lexim online ose audio nga internet archive
       let readUrl: string | null = null;
       if (doc.ia?.length > 0) {
@@ -75,7 +71,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
         title: doc.title,
         cover_url: doc.cover_i
           ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
-          : dynamicPlaceholderUrl,
+          : null, 
         author: doc.author_name?.join(", ") || "Autor i panjohur",
         release_date: doc.first_publish_year?.toString(),
         hasOnlineRead: !!readUrl,
