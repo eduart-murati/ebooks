@@ -15,8 +15,8 @@ export interface Book {
   cover_url: string;
   author?: string;
   release_date?: string;
-  hasOnlineRead?: boolean; // Flag per Lexo / Audio
-  readUrl?: string | null;  // Link i leximit online
+  hasOnlineRead?: boolean;
+  readUrl?: string | null;  
 }
 
 interface UseBooksResult {
