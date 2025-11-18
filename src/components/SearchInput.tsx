@@ -84,6 +84,7 @@ const SearchInput = ({ searchText, onSearchChange, onSearchSubmit }: Props) => {
             type="button"
             onClick={() => {
               onSearchChange("");
+              onSearchSubmit("");
               ref.current?.focus();
             }}
             style={{
