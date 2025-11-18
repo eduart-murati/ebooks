@@ -10,6 +10,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import no_image from "../assets/no_image.svg";
 
 // SVG për shigjetën e kthimit
 const ArrowBackSvg = (props: any) => (
@@ -44,6 +45,7 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
   const [book, setBook] = useState<BookData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const NO_IMAGE_URL = no_image;
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -83,7 +85,7 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
 
   const coverUrl = book.covers
     ? `https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`
-    : "https://placehold.co/300x450/6B7280/FFFFFF?text=No+Cover";
+    : NO_IMAGE_URL;
 
   const description =
     typeof book.description === "string"
