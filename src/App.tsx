@@ -17,7 +17,7 @@ function App() {
   const [bookQuery, setBookQuery] = useState<BookQuery>({
     genre: null,
     bookList: "all",
-    sortOrder: "",
+    sortOrder: "rating.desc",
     searchText: "",
   });
 

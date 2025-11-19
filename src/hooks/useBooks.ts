@@ -14,11 +14,11 @@ export interface Book {
   audioUrl: string | undefined;
   id: string;
   title: string;
-  cover_url: string | null| undefined;
+  cover_url: string | null | undefined;
   author?: string;
   release_date?: string;
   hasOnlineRead?: boolean;
-  readUrl?: string | null;  
+  readUrl?: string | null;
 }
 
 interface UseBooksResult {
@@ -34,22 +34,31 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
     ? bookQuery.genre.name.toLowerCase().replace(/\s+/g, "_")
     : undefined;
 
+  // Harta e vlerave te renditjes 
+  const sortMap: Record<string, string | undefined> = {
+    "rating.desc": "rating desc", 
+    "new": "new", 
+    "old": "old", 
+    "title.asc": "title",
+    // "title.desc": "title desc",  
+  };
+
   if (bookQuery.genre && !bookQuery.searchText) qParam = "";
-  else if (!qParam && !subjectParam) qParam = "popular";
+  else if (!qParam && !subjectParam) qParam = "top";
 
-  const sortOrder = bookQuery.sortOrder
-    ? bookQuery.sortOrder.split(".")[0]
-    : undefined;
+  // finalSortParam mund të jetë `undefined` nëse zgjidhet "title.asc"
+  const finalSortParam = sortMap[bookQuery.sortOrder];
 
-  const params: Record<string, any> = { 
-    q: qParam, 
-    page, 
-    subject: subjectParam, 
-    sort: sortOrder,
-    limit: 25 
+  const params: Record<string, any> = {
+    q: qParam,
+    page,
+    subject: subjectParam,
+    sort: finalSortParam, // Mund të jetë undefined, dhe kjo është e dëshiruar
+    limit: 25,
   };
 
   Object.keys(params).forEach((key) => {
+    // Sigurohuni që nëse `finalSortParam` është `undefined` (për A-Z), ai të fshihet.
     if (params[key] === undefined || params[key] === null || params[key] === "") delete params[key];
   });
 
@@ -71,7 +80,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
         title: doc.title,
         cover_url: doc.cover_i
           ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
-          : null, 
+          : null,
         author: doc.author_name?.join(", ") || "Autor i panjohur",
         release_date: doc.first_publish_year?.toString(),
         hasOnlineRead: !!readUrl,
@@ -80,11 +89,11 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
       };
     }) || [];
 
-  return { 
-    data: mappedData, 
-    totalPages: Math.ceil((data?.numFound || 1) / 25), 
-    error, 
-    isLoading 
+  return {
+    data: mappedData,
+    totalPages: Math.ceil((data?.numFound || 1) / 25),
+    error,
+    isLoading,
   };
 };
 

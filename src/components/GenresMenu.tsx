@@ -17,7 +17,7 @@ import {
   FaHeart,
   FaQuestion,
   FaHistory,
-  FaGhost,
+  // FaGhost,
   FaFeatherAlt,
   FaChild,
   FaCrosshairs,
@@ -40,7 +40,7 @@ const genreIconMap: Record<string, IconType> = {
   History: FaHistory,
   Biography: FaFeatherAlt,
   Thriller: FaCrosshairs,
-  Horror: FaGhost,
+  // Horror: FaGhost,
 };
 
 // Përkthimet
@@ -52,7 +52,7 @@ const translations: Record<string, string> = {
   Mystery: "Mister",
   History: "Histori",
   Biography: "Biografi",
-  Horror: "Horror",
+  // Horror: "Horror",
   Thriller: "Thriller",
   Children: "Fëmijë",
   Poetry: "Poezi",
@@ -83,7 +83,7 @@ export default function GenresMenu({
     "History",
     "Biography",
     "Thriller",
-    "Horror",
+    // "Horror",
   ];
 
   // Krijimi i objektit "All"
@@ -101,7 +101,7 @@ export default function GenresMenu({
   );
 
   return (
-    <Menu.Root onSelect={(e: any) => e.preventDefault()}>
+    <Menu.Root>
       <MenuTrigger asChild>
         <Button
           size="sm"
