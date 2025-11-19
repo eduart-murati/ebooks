@@ -89,23 +89,22 @@ export default function GenresMenu({
       <MenuTrigger asChild>
         <Button
           size="sm"
-          variant="solid"
+          variant="outline" // Kthehemi te varianti Outline
           height={{ base: "36px", md: "40px" }}
-          border="1px solid"
-          // --- STILIZIMI LIGHT MODE (Solid) ---
-          bg="white"
+          // --- STILIZIMI LIGHT MODE (Transparent) ---
+          bg="transparent"
+          borderColor="gray.200"
           color="gray.800"
-          borderColor="gray.300"
-          // --- STILIZIMI DARK MODE (Solid) ---
+          // --- STILIZIMI DARK MODE (Transparent) ---
           _dark={{
-            bg: "gray.800",
-            color: "white",
-            borderColor: "gray.600",
-            _active: { bg: "gray.700" },
+            bg: "transparent", //
+            borderColor: "gray.700",
+            color: "whiteAlpha.900",
+            _active: { bg: "whiteAlpha.200" },
           }}
           // --- HOVER STATES ---
           _hover={{
-            bg: "gray.50",
+            bg: "gray.100",
             _dark: { bg: "gray.700" },
           }}
           css={{
@@ -122,23 +121,25 @@ export default function GenresMenu({
       </MenuTrigger>
 
       <Portal>
-        {/* Z-Index shumë i lartë (9999)  */}
-        <Menu.Positioner zIndex={9999}>
+        <Menu.Positioner zIndex={2000}>
           <MenuContent
-            minW={{ base: "180px", md: "200px" }}
+            minW={{ base: "170px", md: "200px" }}
             maxH="60vh"
             overflowY="auto"
             p={1}
             borderRadius="md"
-            shadow="xl"
-            // --- SFONDI I MENUSË
-            bg="white"
-            border="1px solid"
+            // Light Mode
+            bg="rgba(255,255,255,0.8)"
             borderColor="gray.200"
+            // Dark Mode
             _dark={{
-              bg: "gray.800",
-              borderColor: "gray.600",
-              boxShadow: "0 0 0 1px rgba(255,255,255,0.1)",
+              bg: "rgba(26,32,44,0.7)",
+              borderColor: "gray.700",
+              boxShadow: "dark-lg",
+            }}
+            style={{
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
             }}
           >
             {sortedGenres.map((genre) => {
@@ -150,18 +151,18 @@ export default function GenresMenu({
                   key={genre.id}
                   value={genre.name}
                   onClick={() => onSelectGenre(genre)}
-                  fontWeight={isSelected ? "bold" : "medium"}
+                  fontWeight={isSelected ? "bold" : "normal"}
                   fontSize="md"
                   px={3}
-                  py={3} //
+                  py={2.5}
                   cursor="pointer"
-                  // Ngjyrat Light
-                  color={isSelected ? "blue.700" : "gray.800"}
+                  // Light Mode Items
+                  color={isSelected ? "blue.600" : "gray.800"}
                   _hover={{ bg: "gray.100" }}
-                  // Ngjyrat Dark
+                  // Dark Mode Items
                   _dark={{
-                    color: isSelected ? "blue.300" : "white",
-                    bg: "transparent", // Reset bg
+                    color: isSelected ? "blue.300" : "whiteAlpha.900",
+                    bg: "transparent",
                     _hover: { bg: "gray.700" },
                     _focus: { bg: "gray.700" },
                   }}
