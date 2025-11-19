@@ -1,5 +1,3 @@
-// SortSelector.tsx
-
 import { Button, Menu, Portal } from "@chakra-ui/react";
 import { BsChevronDown } from "react-icons/bs";
 

@@ -46,19 +46,17 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
   if (bookQuery.genre && !bookQuery.searchText) qParam = "";
   else if (!qParam && !subjectParam) qParam = "top";
 
-  // finalSortParam mund të jetë `undefined` nëse zgjidhet "title.asc"
   const finalSortParam = sortMap[bookQuery.sortOrder];
 
   const params: Record<string, any> = {
     q: qParam,
     page,
     subject: subjectParam,
-    sort: finalSortParam, // Mund të jetë undefined, dhe kjo është e dëshiruar
+    sort: finalSortParam, 
     limit: 25,
   };
 
   Object.keys(params).forEach((key) => {
-    // Sigurohuni që nëse `finalSortParam` është `undefined` (për A-Z), ai të fshihet.
     if (params[key] === undefined || params[key] === null || params[key] === "") delete params[key];
   });
 
