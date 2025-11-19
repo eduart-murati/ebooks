@@ -40,7 +40,7 @@ const genreIconMap: Record<string, IconType> = {
   Thriller: FaCrosshairs,
 };
 
-// Përkthimet
+// Perkthimet
 const translations: Record<string, string> = {
   All: "Të Gjithë",
   "Science Fiction": "Shkencor",
@@ -65,7 +65,7 @@ export default function GenresMenu({
   selectedGenre,
   onSelectGenre,
 }: Props) {
-  // Renditja sipas GenreList
+  // Renditja
   const genreOrder = [
     "All",
     "Science Fiction",
@@ -79,22 +79,12 @@ export default function GenresMenu({
     "Thriller",
   ];
 
-  // Krijimi i objektit "All"
   const allGenre: Genre = { id: "all" as any, name: "All" } as Genre;
-
-  // Filtrimi i kategorive
   const filteredGenres = genres.filter((g) => genreOrder.includes(g.name));
-
-  // Kombinimi me "All"
   const combinedGenres: Genre[] = [allGenre, ...filteredGenres];
-
-  // Sortimi sipas genreOrder
   const sortedGenres = combinedGenres.sort(
     (a, b) => genreOrder.indexOf(a.name) - genreOrder.indexOf(b.name)
   );
-
-  // Siguro që initial genre nuk jetë null
-  const currentGenre = selectedGenre || allGenre;
 
   return (
     <Menu.Root>
@@ -103,52 +93,63 @@ export default function GenresMenu({
           size="sm"
           variant="outline"
           height={{ base: "36px", md: "40px" }}
-          borderColor="gray.200"
-          bg="transparent"
+          // --- STILIZIMI PËR LIGHT MODE ---
           color="gray.800"
-          _hover={{ bg: "gray.100" }}
+          borderColor="gray.300"
+          bg="transparent"
+          // --- STILIZIMI PËR DARK MODE (_dark) ---
+
           _dark={{
             color: "whiteAlpha.900",
-            borderColor: "gray.700",
-            _hover: { bg: "gray.700" },
+            borderColor: "gray.600",
+            bg: "transparent",
+            _active: { bg: "gray.700" },
+          }}
+          _hover={{
+            bg: "gray.100",
+            _dark: { bg: "gray.700" },
+          }}
+          _active={{
+            bg: "gray.200",
+            transform: "scale(0.98)",
+          }}
+          css={{
+            "& svg": { color: "currentColor" },
           }}
         >
-          <FaBars
-            style={{
-              marginRight: 6,
-              color: currentGenre ? undefined : undefined,
-            }}
-          />
-          <Box
-            color="inherit"
-            fontWeight="medium"
-            textAlign="left"
-            flex="1"
-            overflow="hidden"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-          >
-            {translations[currentGenre.name] || currentGenre.name}
+          <FaBars style={{ marginRight: 6 }} />
+          <Box as="span" display="inline-block">
+            {selectedGenre
+              ? translations[selectedGenre.name] || selectedGenre.name
+              : "Të gjithë"}
           </Box>
         </Button>
       </MenuTrigger>
 
       <Portal>
-        <Menu.Positioner>
+        <Menu.Positioner zIndex={1500}>
           <MenuContent
-            bg="rgba(255,255,255,0.50)"
-            borderColor="gray.200"
-            _dark={{ bg: "rgba(26,32,44,0.50)", borderColor: "gray.700" }}
-            minW={{ base: "170px", md: "200px" }}
-            p={2}
+            minW={{ base: "160px", md: "200px" }}
+            maxH="60vh"
+            overflowY="auto"
+            p={1}
             borderRadius="md"
+            shadow="lg"
+            // Sfondi Light
+            bg="rgba(255,255,255,0.85)"
+            borderColor="gray.200"
+            // Sfondi Dark
+            _dark={{
+              bg: "rgba(26,32,44,0.90)",
+              borderColor: "gray.700",
+            }}
             style={{
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
             }}
           >
             {sortedGenres.map((genre) => {
-              const isSelected = genre.id === currentGenre.id;
+              const isSelected = genre.id === selectedGenre?.id;
               const IconComp = genreIconMap[genre.name] || FaBook;
 
               return (
@@ -156,23 +157,27 @@ export default function GenresMenu({
                   key={genre.id}
                   value={genre.name}
                   onClick={() => onSelectGenre(genre)}
-                  fontWeight={isSelected ? "bold" : "normal"}
-                  fontSize={{ base: "md", md: "md" }}
+                  fontWeight={isSelected ? "bold" : "medium"}
+                  fontSize="md"
                   px={3}
-                  py={2}
+                  py={2.5}
                   cursor="pointer"
-                  color={isSelected ? "blue.600" : "gray.800"}
+                  // Ngjyrat Light
+                  color={isSelected ? "blue.600" : "gray.700"}
                   _hover={{ bg: "gray.100" }}
+                  // Ngjyrat Dark
                   _dark={{
-                    color: isSelected ? "blue.300" : "whiteAlpha.900",
+                    color: isSelected ? "blue.300" : "gray.100",
                     _hover: { bg: "gray.700" },
+                    _focus: { bg: "gray.700" },
                   }}
                 >
                   <HStack gap={3}>
                     <Icon
                       as={IconComp}
                       boxSize="18px"
-                      color={isSelected ? "inherit" : undefined}
+                      color={isSelected ? "inherit" : "currentColor"}
+                      opacity={isSelected ? 1 : 0.8}
                     />
                     <Box>{translations[genre.name] || genre.name}</Box>
                   </HStack>
