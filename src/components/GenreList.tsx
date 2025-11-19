@@ -15,7 +15,7 @@ import {
   FaHeart,
   FaQuestion,
   FaHistory,
-  FaGhost,
+  // FaGhost,
   FaFeatherAlt,
   FaChild,
   FaCrosshairs,
@@ -32,7 +32,7 @@ const genreIconMap: Record<string, IconType> = {
   Mystery: FaQuestion,
   History: FaHistory,
   Biography: FaFeatherAlt,
-  Horror: FaGhost,
+  // Horror: FaGhost,
   Thriller: FaCrosshairs,
   Children: FaChild,
   Poetry: FaBook,
@@ -47,7 +47,7 @@ const genreTranslations: Record<string, string> = {
   Mystery: "Mister",
   History: "Histori",
   Biography: "Biografi",
-  Horror: "Horror",
+  // Horror: "Horror",
   Thriller: "Thriller",
   Children: "Fëmijë",
   Poetry: "Poezi",
@@ -65,7 +65,7 @@ const genreOrder = [
   "History",
   "Biography",
   "Thriller",
-  "Horror",
+  // "Horror",
 ];
 
 interface Props {
