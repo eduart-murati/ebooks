@@ -8,13 +8,11 @@ import {
   VStack,
   Button,
   HStack,
-  Link, // Shtohet Link nga Chakra
+  Link,
 } from "@chakra-ui/react";
 import axios from "axios";
 import no_image from "../assets/no_image.svg";
-import { FaExternalLinkAlt } from "react-icons/fa"; // Shtohet ikona për linkun e jashtëm
 
-// 📚 ArrowBack SVG Component (Mbetet i pandryshuar)
 const ArrowBackSvg = (props: any) => (
   <svg
     {...props}
@@ -44,21 +42,17 @@ interface UnifiedBookData {
   authors: string;
 }
 
-// ----------------------------------------------------
-// --- KOMPONENTI KRYESOR: BookDetails ---
-// ----------------------------------------------------
-
 const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
   const [book, setBook] = useState<UnifiedBookData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // State për të menaxhuar burimin e imazhit në rast gabimi (p.sh., 404)
+  // State per te menaxhuar burimin e imazhit ne rast gabimi (p.sh., 404)
   const [displayImage, setDisplayImage] = useState<string>("");
 
   const NO_IMAGE_URL = no_image;
 
-  // Funksioni për pastrimin e përshkrimit
+  // Funksioni per pastrimin e përshkrimit
   const cleanDescription = (desc: any): string => {
     if (!desc) return "Ky libër nuk ka përshkrim të disponueshëm.";
     let text = "";
@@ -77,7 +71,7 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
         let cover: string;
         let bookData: UnifiedBookData;
 
-        // 1. ZGJEDHJA E BURIMIT (OpenLibrary vs Archive.org)
+        // BURIMI (OpenLibrary vs Archive.org)
         if (bookId.startsWith("/") || bookId.startsWith("/works/")) {
           // --- OPEN LIBRARY ---
           const res = await axios.get(`https://openlibrary.org${bookId}.json`);
@@ -91,10 +85,10 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
             title: data.title,
             description: cleanDescription(data.description),
             coverUrl: cover,
-            authors: "Detaje mbi autorin në OpenLibrary", // Zgjedhje e thjeshtuar
+            authors: "Detaje mbi autorin në OpenLibrary",
           };
         } else {
-          // --- ARCHIVE.ORG (Për shembull: ismail-kadare-prilli-i-thyer) ---
+          // --- ARCHIVE.ORG ---
           const res = await axios.get(`https://archive.org/metadata/${bookId}`);
           if (!res.data || !res.data.metadata)
             throw new Error("Nuk u gjet metadata");
@@ -113,13 +107,13 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
           };
         }
 
-        // 2. Ruajtja e të dhënave
+        // Ruajtja e te dhenave
         setBook(bookData);
         setDisplayImage(cover); // Inicializon displayImage me coverin e sapogjetur
       } catch (e) {
         console.error("Gabim në fetchBook:", e);
         setError("Gabim gjatë ngarkimit të librit. Ju lutem provoni përsëri.");
-        // Në rast gabimi, sigurohemi që imazhi fallback të shfaqet
+        // Në rast gabimi, sigurohemi qe imazhi fallback te shfaqet
         setDisplayImage(NO_IMAGE_URL);
       } finally {
         setIsLoading(false);
@@ -129,7 +123,6 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
     fetchBook();
   }, [bookId]);
 
-  // --- RENDERIMET KONDICIONALE ---
   if (isLoading)
     return (
       <Box textAlign="center" mt="50px">
@@ -155,7 +148,6 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
       </Box>
     );
 
-  // --- RENDERIMI KRYESOR ---
   return (
     <VStack gap={6} align="center" mt={6} px={4}>
       <Image
@@ -166,7 +158,6 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
         objectFit="cover"
         borderRadius="lg"
         shadow="lg"
-        // Zgjidhja për fallback: ndryshon state-in në rast gabimi të ngarkimit
         onError={() => setDisplayImage(NO_IMAGE_URL)}
       />
 
@@ -182,15 +173,14 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
         </Text>
       </Box>
 
-      {/* --- BUTONI ARCHIVE.ORG I RREGULLUAR --- */}
-      {/* Përdorim Link si wrapper, i cili merr href dhe isExternal */}
+      {/* Përdorim Link si wrapper, i cili merr href */}
       {!bookId.startsWith("/") && (
         <Link
           href={`https://archive.org/details/${bookId}`}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ textDecoration: "none" }} // Heq stilimin default të Link
-          width={{ base: "100%", md: "auto" }} // Responsive width
+          style={{ textDecoration: "none" }}
+          width={{ base: "100%", md: "auto" }}
           display="flex"
           justifyContent="center"
         ></Link>

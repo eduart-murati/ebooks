@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import apiClient from "@/services/api-client"; // Klienti yt i OpenLibrary (axios)
-import archiveClient from "@/services/archive-client"; // Klienti yt i Archive.org
+import apiClient from "@/services/api-client"; 
+import archiveClient from "@/services/archive-client"; 
 import type { Genre } from "./useGenres";
 import { CanceledError } from "axios";
 
@@ -40,7 +40,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
     setIsLoading(true);
     setError("");
 
-    // --- 1. Përgatitja e parametrave për OpenLibrary ---
+    // parametrat per OpenLibrary 
     let qParam = bookQuery.searchText || "";
     let subjectParam = bookQuery.genre?.name
       ? bookQuery.genre.name.toLowerCase().replace(/\s+/g, "_")
@@ -66,25 +66,23 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
       limit: 25,
     };
 
-    // Pastrimi i parametrave bosh
+    // Pastrimi i parametrave
     Object.keys(olParams).forEach((key) => {
       if (olParams[key] === undefined || olParams[key] === null || olParams[key] === "")
         delete olParams[key];
     });
 
-    // Funksioni për OpenLibrary
+
     const fetchOpenLibrary = apiClient.get("/search.json", {
       signal: controller.signal,
       params: olParams,
     });
 
-    // --- 2. Përgatitja e kërkesës për Archive.org ---
+  
     let fetchArchiveOrg = Promise.resolve({ data: { response: { docs: [], numFound: 0 } } });
 
-    // Kërkojmë në Archive.org vetëm nëse përdoruesi ka shkruar diçka (searchText)
     if (bookQuery.searchText && bookQuery.searchText.trim().length > 0) {
       const query = bookQuery.searchText;
-      // Kërkojmë në titull ose autor, dhe filtrojmë vetëm tekste (mediatype:texts)
       const q = `(title:(${query}) OR creator:(${query})) AND mediatype:(texts)`;
       
       const archiveParams = {
@@ -92,7 +90,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
         page,
         rows: 25,
         output: "json",
-        "fl[]": ["identifier", "title", "creator", "date", "year"], // Fushat që duam
+        "fl[]": ["identifier", "title", "creator", "date", "year"], 
       };
 
       fetchArchiveOrg = archiveClient.get("", {
@@ -101,10 +99,10 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
       });
     }
 
-    // --- 3. Ekzekutimi Paralel (Promise.all) ---
+    // Ekzekutimi Paralel (Promise.all)
     Promise.all([fetchOpenLibrary, fetchArchiveOrg])
       .then(([olRes, archiveRes]) => {
-        // --- Mapimi i OpenLibrary ---
+        // Mapimi i OpenLibrary 
         const olDocs = olRes.data.docs || [];
         const mappedOLBooks: Book[] = olDocs.map((doc: any) => {
           let readUrl: string | null = null;
@@ -120,7 +118,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
             title: doc.title,
             cover_url: doc.cover_i
               ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
-              : null, // Ose mund të vendosësh një placeholder
+              : null, 
             author: doc.author_name?.join(", ") || "Autor i panjohur",
             release_date: doc.first_publish_year?.toString(),
             hasOnlineRead: !!readUrl,
@@ -129,7 +127,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
           };
         });
 
-        // --- Mapimi i Archive.org ---
+        // Mapimi i Archive.org
         const archiveDocs = archiveRes.data.response?.docs || [];
         const mappedArchiveBooks: Book[] = archiveDocs.map((doc: any) => {
           const id = doc.identifier;
@@ -145,7 +143,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
           };
         });
 
-        // --- Bashkimi i rezultateve ---
+        // Bashkimi i rezultateve 
         // Archive.org vendoset në fillim ose fund sipas dëshirës (këtu i bashkova në fund)
         // Mund të bësh filter për duplicate ID nëse ka rrezik mbivendosje
         const combinedBooks = [...mappedOLBooks, ...mappedArchiveBooks];
@@ -162,7 +160,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
       });
 
     return () => controller.abort();
-  }, [bookQuery, page]); // Varet nga ndryshimi i kërkimit ose faqes
+  }, [bookQuery, page]); 
 
   return {
     data,
