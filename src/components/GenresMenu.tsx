@@ -26,7 +26,6 @@ import {
 import type { IconType } from "react-icons/lib";
 
 import type { Genre } from "@/hooks/useGenres";
-import { useColorMode } from "./ui/color-mode";
 
 // Ikonat
 const genreIconMap: Record<string, IconType> = {
@@ -43,7 +42,7 @@ const genreIconMap: Record<string, IconType> = {
   // Horror: FaGhost,
 };
 
-// Përkthimet
+// Perkthimet
 const translations: Record<string, string> = {
   All: "Të Gjithë",
   "Science Fiction": "Shkencor",
@@ -69,8 +68,6 @@ export default function GenresMenu({
   selectedGenre,
   onSelectGenre,
 }: Props) {
-  const { colorMode } = useColorMode();
-
   // Renditja sipas GenreList
   const genreOrder = [
     "All",
@@ -107,15 +104,22 @@ export default function GenresMenu({
           size="sm"
           variant="outline"
           height={{ base: "36px", md: "40px" }}
-          color={colorMode === "dark" ? "whiteAlpha.900" : "gray.800"} // Teksti i dukshëm
+          color="gray.800"
+          borderColor="gray.200"
+          bg="transparent"
+          _dark={{
+            color: "whiteAlpha.900",
+            borderColor: "gray.700",
+            bg: "transparent",
+            _hover: { bg: "gray.700" },
+          }}
           _hover={{
-            bg: colorMode === "dark" ? "gray.700" : "gray.100",
+            bg: "gray.100",
           }}
         >
           <FaBars
             style={{
               marginRight: 6,
-              color: colorMode === "dark" ? "whiteAlpha.900" : "gray.800",
             }}
           />
           {selectedGenre
@@ -127,13 +131,15 @@ export default function GenresMenu({
       <Portal>
         <Menu.Positioner>
           <MenuContent
-            bg={
-              colorMode === "dark"
-                ? "rgba(26,32,44,0.50)"
-                : "rgba(255,255,255,0.50)"
-            } // transparencë 50%
-            borderColor={colorMode === "dark" ? "gray.700" : "gray.200"}
-            minW={{ base: "170px", md: "200px" }} // gjeresia e listes mob & desk
+            // Sfondi për Light Mode
+            bg="rgba(255,255,255,0.50)"
+            borderColor="gray.200"
+            // Sfondi për Dark Mode
+            _dark={{
+              bg: "rgba(26,32,44,0.50)",
+              borderColor: "gray.700",
+            }}
+            minW={{ base: "170px", md: "200px" }}
             p={2}
             borderRadius="md"
             style={{
@@ -149,37 +155,26 @@ export default function GenresMenu({
                 <MenuItem
                   key={genre.id}
                   value={genre.name}
-                  onSelect={() => onSelectGenre(genre)}
+                  onClick={() => onSelectGenre(genre)}
                   fontWeight={isSelected ? "bold" : "normal"}
-                  fontSize={{ base: "md", md: "md" }} // font per mob & desk
-                  color={
-                    isSelected
-                      ? colorMode === "dark"
-                        ? "blue.300"
-                        : "blue.600"
-                      : colorMode === "dark"
-                      ? "whiteAlpha.900"
-                      : "gray.800"
-                  }
-                  _hover={{
-                    bg: colorMode === "dark" ? "gray.700" : "gray.100",
-                  }}
+                  fontSize={{ base: "md", md: "md" }}
                   px={3}
                   py={2}
+                  cursor="pointer"
+                  // Ngjyrat Default (Light Mode)
+                  color={isSelected ? "blue.600" : "gray.800"}
+                  _hover={{ bg: "gray.100" }}
+                  // Ngjyrat Dark Mode (_dark)
+                  _dark={{
+                    color: isSelected ? "blue.300" : "whiteAlpha.900",
+                    _hover: { bg: "gray.700" },
+                  }}
                 >
                   <HStack gap={3}>
                     <Icon
                       as={IconComp}
                       boxSize="18px"
-                      color={
-                        isSelected
-                          ? colorMode === "dark"
-                            ? "blue.300"
-                            : "blue.600"
-                          : colorMode === "dark"
-                          ? "whiteAlpha.900"
-                          : "gray.700"
-                      }
+                      color={isSelected ? "inherit" : undefined}
                     />
                     <Box>{translations[genre.name] || genre.name}</Box>
                   </HStack>
