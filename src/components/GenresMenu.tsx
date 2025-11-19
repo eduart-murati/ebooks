@@ -23,7 +23,6 @@ import {
   FaGlobe,
 } from "react-icons/fa";
 import type { IconType } from "react-icons/lib";
-
 import type { Genre } from "@/hooks/useGenres";
 
 // Ikonat
@@ -40,7 +39,7 @@ const genreIconMap: Record<string, IconType> = {
   Thriller: FaCrosshairs,
 };
 
-// Perkthimet
+// Përkthimet
 const translations: Record<string, string> = {
   All: "Të Gjithë",
   "Science Fiction": "Shkencor",
@@ -65,7 +64,6 @@ export default function GenresMenu({
   selectedGenre,
   onSelectGenre,
 }: Props) {
-  // Renditja
   const genreOrder = [
     "All",
     "Science Fiction",
@@ -91,27 +89,24 @@ export default function GenresMenu({
       <MenuTrigger asChild>
         <Button
           size="sm"
-          variant="outline"
+          variant="solid"
           height={{ base: "36px", md: "40px" }}
-          // --- STILIZIMI PËR LIGHT MODE ---
+          border="1px solid"
+          // --- STILIZIMI LIGHT MODE (Solid) ---
+          bg="white"
           color="gray.800"
           borderColor="gray.300"
-          bg="transparent"
-          // --- STILIZIMI PËR DARK MODE (_dark) ---
-
+          // --- STILIZIMI DARK MODE (Solid) ---
           _dark={{
-            color: "whiteAlpha.900",
+            bg: "gray.800",
+            color: "white",
             borderColor: "gray.600",
-            bg: "transparent",
             _active: { bg: "gray.700" },
           }}
+          // --- HOVER STATES ---
           _hover={{
-            bg: "gray.100",
+            bg: "gray.50",
             _dark: { bg: "gray.700" },
-          }}
-          _active={{
-            bg: "gray.200",
-            transform: "scale(0.98)",
           }}
           css={{
             "& svg": { color: "currentColor" },
@@ -127,25 +122,23 @@ export default function GenresMenu({
       </MenuTrigger>
 
       <Portal>
-        <Menu.Positioner zIndex={1500}>
+        {/* Z-Index shumë i lartë (9999)  */}
+        <Menu.Positioner zIndex={9999}>
           <MenuContent
-            minW={{ base: "160px", md: "200px" }}
+            minW={{ base: "180px", md: "200px" }}
             maxH="60vh"
             overflowY="auto"
             p={1}
             borderRadius="md"
-            shadow="lg"
-            // Sfondi Light
-            bg="rgba(255,255,255,0.85)"
+            shadow="xl"
+            // --- SFONDI I MENUSË
+            bg="white"
+            border="1px solid"
             borderColor="gray.200"
-            // Sfondi Dark
             _dark={{
-              bg: "rgba(26,32,44,0.90)",
-              borderColor: "gray.700",
-            }}
-            style={{
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
+              bg: "gray.800",
+              borderColor: "gray.600",
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.1)",
             }}
           >
             {sortedGenres.map((genre) => {
@@ -160,14 +153,15 @@ export default function GenresMenu({
                   fontWeight={isSelected ? "bold" : "medium"}
                   fontSize="md"
                   px={3}
-                  py={2.5}
+                  py={3} //
                   cursor="pointer"
                   // Ngjyrat Light
-                  color={isSelected ? "blue.600" : "gray.700"}
+                  color={isSelected ? "blue.700" : "gray.800"}
                   _hover={{ bg: "gray.100" }}
                   // Ngjyrat Dark
                   _dark={{
-                    color: isSelected ? "blue.300" : "gray.100",
+                    color: isSelected ? "blue.300" : "white",
+                    bg: "transparent", // Reset bg
                     _hover: { bg: "gray.700" },
                     _focus: { bg: "gray.700" },
                   }}
@@ -177,7 +171,6 @@ export default function GenresMenu({
                       as={IconComp}
                       boxSize="18px"
                       color={isSelected ? "inherit" : "currentColor"}
-                      opacity={isSelected ? 1 : 0.8}
                     />
                     <Box>{translations[genre.name] || genre.name}</Box>
                   </HStack>
