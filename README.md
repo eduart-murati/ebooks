@@ -1,6 +1,8 @@
 # eBook
 
-eBook is a minimal web application built with **React + TypeScript + Vite** that allows you to search and read books online. It supports searching by **genre**, **author**, and **keywords**, and features a responsive UI built with **Chakra UI**. Books available online can be read directly.
+**eBook** is a minimal web application built with **React + TypeScript + Vite** that allows you to search and read books online. It supports searching by **genre**, **author**, and **keywords**, and features a responsive UI built with **Chakra UI**. Books available online can be read directly.
+
+<img width="1884" height="936" alt="eBooks" src="https://github.com/user-attachments/assets/816ba07a-b3b1-4c89-9fbc-e53190e6f607" />
 
 ## Getting Started
 
