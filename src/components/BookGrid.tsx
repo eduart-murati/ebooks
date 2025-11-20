@@ -1,10 +1,12 @@
 import { SimpleGrid, Text, Button, HStack } from "@chakra-ui/react";
-import useBooks, { type Book, type BookQuery } from "../hooks/useBooks";
+import useBooks from "../hooks/useBooks";
+import type { Book, BookQuery } from "@/types/book";
 import BookCard from "./BookCard";
 import BookCardSkeleton from "./BookCardSkeleton";
 import BookCardContainer from "./BookCardContainer";
 import { useState } from "react";
 import BookReader from "./BookReader";
+import { PAGINATION } from "@/constants";
 
 interface Props {
   bookQuery: BookQuery;
@@ -24,7 +26,10 @@ const BookGrid = ({ bookQuery, page, setPage, onSelectBook }: Props) => {
     isLoading,
   } = useBooks(bookQuery, page);
 
-  const skeletons = Array.from({ length: 25 }, (_, i) => i);
+  const skeletons = Array.from(
+    { length: PAGINATION.SKELETON_COUNT },
+    (_, i) => i
+  );
 
   return (
     <>

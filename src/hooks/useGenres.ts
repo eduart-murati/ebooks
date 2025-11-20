@@ -1,4 +1,3 @@
-
 export interface Genre {
   id: number;
   name: string;
@@ -18,7 +17,7 @@ const GENRES: Genre[] = [
   { id: 10, name: "Poetry" },
 ];
 
-const useBookGenres = () => {
+const useGenres = () => {
   // nuk ka fetch, eshte statike
   const data = GENRES;
   const error = null;
@@ -27,4 +26,4 @@ const useBookGenres = () => {
   return { data, error, isLoading };
 };
 
-export default useBookGenres;
+export default useGenres;

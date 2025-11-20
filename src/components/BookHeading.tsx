@@ -1,4 +1,4 @@
-import type { BookQuery } from "../hooks/useBooks";
+import type { BookQuery } from "@/types/book";
 import { Heading } from "@chakra-ui/react";
 import { useColorModeValue } from "./ui/color-mode";
 
@@ -45,7 +45,6 @@ const BookHeading = ({ bookQuery }: Props) => {
       marginY={5}
       fontSize={{ base: "3xl", md: "4xl" }}
       color={textColor}
-      textTransform="capitalize"
     >
       {headingText}
     </Heading>

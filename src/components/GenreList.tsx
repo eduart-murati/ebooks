@@ -22,6 +22,7 @@ import {
   FaGlobe,
 } from "react-icons/fa";
 import type { Genre } from "@/hooks/useGenres";
+import { useColorMode } from "@/components/ui/color-mode";
 
 // Ikonat
 const genreIconMap: Record<string, IconType> = {
@@ -72,7 +73,6 @@ interface Props {
   onSelectGenre: (genre: Genre) => void;
   selectedGenre: Genre | null;
   genres: Genre[];
-  isDarkMode?: boolean;
   isVisible?: boolean;
 }
 
@@ -80,14 +80,17 @@ const GenreList = ({
   selectedGenre,
   onSelectGenre,
   genres,
-  isDarkMode = false,
   isVisible = true,
 }: Props) => {
-  const selectedColor = isDarkMode ? "blue.300" : "blue.500";
-  const defaultColor = isDarkMode ? "gray.400" : "gray.600";
+  const { colorMode } = useColorMode();
+  const isDarkMode = colorMode === "dark";
 
-  // Ngjyrat e sfondit me alpha (transparence) te Chakra UI
-  const transparentBg = isDarkMode ? "blackAlpha.600" : "whiteAlpha.800";
+  // Ngjyrat për dark mode - sfond i errët dhe tekst i bardhë
+  const selectedColor = isDarkMode ? "blue.300" : "blue.500";
+  const defaultColor = isDarkMode ? "gray.200" : "gray.600";
+
+  // Ngjyrat e sfondit - në dark mode përdorim transparent për të përputhur me BookGrid
+  const transparentBg = isDarkMode ? "transparent" : "whiteAlpha.800";
   const hoverBg = isDarkMode ? "whiteAlpha.100" : "blackAlpha.50";
 
   if (!genres) return <Spinner />;
@@ -122,11 +125,6 @@ const GenreList = ({
         bg={transparentBg}
         position="relative"
         zIndex={1}
-        // Apliko stilet direkt për backdrop-filter me prefikse
-        style={{
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
-        }}
       >
         {sortedGenres.map((genre) => {
           // Logjika e zgjedhjes

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Image,
@@ -10,118 +10,33 @@ import {
   HStack,
   Link,
 } from "@chakra-ui/react";
-import axios from "axios";
+import { useBookDetails } from "@/hooks/useBookDetails";
+import { ArrowBackIcon } from "./icons/ArrowBackIcon";
 import no_image from "../assets/no_image.svg";
 
-const ArrowBackSvg = (props: any) => (
-  <svg
-    {...props}
-    viewBox="0 0 24 24"
-    width="1em"
-    height="1em"
-    stroke="currentColor"
-    strokeWidth="2"
-    fill="none"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="15 18 9 12 15 6"></polyline>
-  </svg>
-);
-
-// --- INTERFACES ---
 interface BookDetailsProps {
   bookId: string;
   onBack: () => void;
 }
 
-interface UnifiedBookData {
-  title: string;
-  description: string;
-  coverUrl: string;
-  authors: string;
-}
-
 const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
-  const [book, setBook] = useState<UnifiedBookData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const { book, isLoading, error } = useBookDetails(bookId);
   // State per te menaxhuar burimin e imazhit ne rast gabimi (p.sh., 404)
   const [displayImage, setDisplayImage] = useState<string>("");
-
   const NO_IMAGE_URL = no_image;
 
-  // Funksioni per pastrimin e përshkrimit
-  const cleanDescription = (desc: any): string => {
-    if (!desc) return "Ky libër nuk ka përshkrim të disponueshëm.";
-    let text = "";
-    if (typeof desc === "string") text = desc;
-    else if (typeof desc === "object" && desc.value) text = desc.value;
-    // Heqim tag-et HTML
-    return text.replace(/<[^>]*>?/gm, "");
-  };
-
+  // Initialize display image when book data is loaded (same logic as old code)
   useEffect(() => {
-    const fetchBook = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        let cover: string;
-        let bookData: UnifiedBookData;
-
-        // BURIMI (OpenLibrary vs Archive.org)
-        if (bookId.startsWith("/") || bookId.startsWith("/works/")) {
-          // --- OPEN LIBRARY ---
-          const res = await axios.get(`https://openlibrary.org${bookId}.json`);
-          const data = res.data;
-
-          cover = data.covers
-            ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
-            : NO_IMAGE_URL;
-
-          bookData = {
-            title: data.title,
-            description: cleanDescription(data.description),
-            coverUrl: cover,
-            authors: "Detaje mbi autorin në OpenLibrary",
-          };
-        } else {
-          // --- ARCHIVE.ORG ---
-          const res = await axios.get(`https://archive.org/metadata/${bookId}`);
-          if (!res.data || !res.data.metadata)
-            throw new Error("Nuk u gjet metadata");
-          const meta = res.data.metadata;
-
-          cover = `https://archive.org/services/img/${bookId}`;
-          const authorText = Array.isArray(meta.creator)
-            ? meta.creator.join(", ")
-            : meta.creator || "Autor i panjohur";
-
-          bookData = {
-            title: meta.title || "Pa titull",
-            description: cleanDescription(meta.description),
-            coverUrl: cover,
-            authors: authorText,
-          };
-        }
-
-        // Ruajtja e te dhenave
-        setBook(bookData);
-        setDisplayImage(cover); // Inicializon displayImage me coverin e sapogjetur
-      } catch (e) {
-        console.error("Gabim në fetchBook:", e);
-        setError("Gabim gjatë ngarkimit të librit. Ju lutem provoni përsëri.");
-        // Në rast gabimi, sigurohemi qe imazhi fallback te shfaqet
-        setDisplayImage(NO_IMAGE_URL);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBook();
-  }, [bookId]);
+    if (book) {
+      setDisplayImage(book.coverUrl); // Inicializon displayImage me coverin e sapogjetur
+    } else if (error) {
+      // Në rast gabimi, sigurohemi qe imazhi fallback te shfaqet
+      setDisplayImage(NO_IMAGE_URL);
+    } else {
+      // Reset when bookId changes
+      setDisplayImage("");
+    }
+  }, [book, error, bookId]);
 
   if (isLoading)
     return (
@@ -151,7 +66,7 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
   return (
     <VStack gap={6} align="center" mt={6} px={4}>
       <Image
-        src={displayImage}
+        src={displayImage || book.coverUrl || NO_IMAGE_URL}
         alt={book.title}
         width="300px"
         height="450px"
@@ -188,7 +103,7 @@ const BookDetails = ({ bookId, onBack }: BookDetailsProps) => {
 
       <Button onClick={onBack} colorScheme="blue" mt={4} mb={10}>
         <HStack gap={2}>
-          <ArrowBackSvg />
+          <ArrowBackIcon />
           <Text>Kthehu te Lista</Text>
         </HStack>
       </Button>

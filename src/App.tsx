@@ -7,19 +7,15 @@ import SortSelector from "./components/SortSelector";
 import BookHeading from "./components/BookHeading";
 import BookDetails from "./components/BookDetails";
 import useGenres, { type Genre } from "./hooks/useGenres";
-import type { BookQuery } from "./hooks/useBooks";
+import type { BookQuery } from "./types/book";
+import { DEFAULT_BOOK_QUERY } from "./constants";
 
 function App() {
   const showAside = useBreakpointValue({ lg: true });
   const showHeading = useBreakpointValue({ base: false, lg: true });
 
   const [searchText, setSearchText] = useState("");
-  const [bookQuery, setBookQuery] = useState<BookQuery>({
-    genre: null,
-    bookList: "all",
-    sortOrder: "rating.desc",
-    searchText: "",
-  });
+  const [bookQuery, setBookQuery] = useState<BookQuery>(DEFAULT_BOOK_QUERY);
 
   const [selectedBookKey, setSelectedBookKey] = useState<string | null>(null);
   const [page, setPage] = useState(1);

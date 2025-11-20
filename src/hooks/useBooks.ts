@@ -1,26 +1,12 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/services/api-client"; 
 import archiveClient from "@/services/archive-client"; 
-import type { Genre } from "./useGenres";
 import { CanceledError } from "axios";
-
-export interface BookQuery {
-  genre: Genre | null;
-  bookList: string;
-  sortOrder: string;
-  searchText: string;
-}
-
-export interface Book {
-  id: string;
-  title: string;
-  cover_url: string | null | undefined;
-  author?: string;
-  release_date?: string;
-  hasOnlineRead?: boolean;
-  readUrl?: string | null;
-  audioUrl?: string | undefined;
-}
+import type { Book, BookQuery } from "@/types/book";
+import type { OpenLibraryResponse, ArchiveOrgResponse } from "@/types/api";
+import { transformOpenLibraryBook, transformArchiveBook } from "@/utils/bookTransformers";
+import { buildOpenLibraryParams, buildArchiveParams } from "@/utils/queryBuilders";
+import { PAGINATION } from "@/constants";
 
 interface UseBooksResult {
   data: Book[];
@@ -40,116 +26,54 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
     setIsLoading(true);
     setError("");
 
-    // parametrat per OpenLibrary 
-    let qParam = bookQuery.searchText || "";
-    let subjectParam = bookQuery.genre?.name
-      ? bookQuery.genre.name.toLowerCase().replace(/\s+/g, "_")
-      : undefined;
+    // Build query parameters
+    const olParams = buildOpenLibraryParams(bookQuery, page);
 
-    const sortMap: Record<string, string | undefined> = {
-      "rating.desc": "rating desc",
-      new: "new",
-      old: "old",
-      "title.asc": "title",
-    };
-
-    if (bookQuery.genre && !bookQuery.searchText) qParam = "";
-    else if (!qParam && !subjectParam) qParam = "top";
-
-    const finalSortParam = sortMap[bookQuery.sortOrder];
-
-    const olParams: Record<string, any> = {
-      q: qParam,
-      page,
-      subject: subjectParam,
-      sort: finalSortParam,
-      limit: 25,
-    };
-
-    // Pastrimi i parametrave
-    Object.keys(olParams).forEach((key) => {
-      if (olParams[key] === undefined || olParams[key] === null || olParams[key] === "")
-        delete olParams[key];
-    });
-
-
-    const fetchOpenLibrary = apiClient.get("/search.json", {
+    const fetchOpenLibrary = apiClient.get<OpenLibraryResponse>("/search.json", {
       signal: controller.signal,
       params: olParams,
     });
 
-  
-    let fetchArchiveOrg = Promise.resolve({ data: { response: { docs: [], numFound: 0 } } });
+    // Archive.org fetch only if search text exists
+    let fetchArchiveOrg = Promise.resolve<{ data: ArchiveOrgResponse }>({
+      data: { response: { docs: [], numFound: 0, start: 0 } },
+    });
 
     if (bookQuery.searchText && bookQuery.searchText.trim().length > 0) {
-      const query = bookQuery.searchText;
-      const q = `(title:(${query}) OR creator:(${query})) AND mediatype:(texts)`;
-      
-      const archiveParams = {
-        q,
-        page,
-        rows: 25,
-        output: "json",
-        "fl[]": ["identifier", "title", "creator", "date", "year"], 
-      };
+      const archiveParams = buildArchiveParams(bookQuery.searchText, page);
 
-      fetchArchiveOrg = archiveClient.get("", {
+      fetchArchiveOrg = archiveClient.get<ArchiveOrgResponse>("", {
         signal: controller.signal,
         params: archiveParams,
       });
     }
 
-    // Ekzekutimi Paralel (Promise.all)
+    // Execute parallel requests
     Promise.all([fetchOpenLibrary, fetchArchiveOrg])
       .then(([olRes, archiveRes]) => {
-        // Mapimi i OpenLibrary 
+        // Transform Open Library books
         const olDocs = olRes.data.docs || [];
-        const mappedOLBooks: Book[] = olDocs.map((doc: any) => {
-          let readUrl: string | null = null;
-          let audioUrl: string | undefined = undefined;
+        const mappedOLBooks: Book[] = olDocs.map(transformOpenLibraryBook);
 
-          if (doc.ia?.length > 0) {
-            readUrl = `https://archive.org/embed/${doc.ia[0]}?ui=embed&bgcolor=000000&color=ffffff&controls=1`;
-            audioUrl = `https://archive.org/download/${doc.ia[0]}/${doc.ia[0]}.mp3`;
-          }
-
-          return {
-            id: doc.key,
-            title: doc.title,
-            cover_url: doc.cover_i
-              ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
-              : null, 
-            author: doc.author_name?.join(", ") || "Autor i panjohur",
-            release_date: doc.first_publish_year?.toString(),
-            hasOnlineRead: !!readUrl,
-            readUrl,
-            audioUrl,
-          };
-        });
-
-        // Mapimi i Archive.org
+        // Transform Archive.org books
         const archiveDocs = archiveRes.data.response?.docs || [];
-        const mappedArchiveBooks: Book[] = archiveDocs.map((doc: any) => {
-          const id = doc.identifier;
-          return {
-            id: id, // ID unike nga Archive
-            title: doc.title || "Pa titull",
-            cover_url: `https://archive.org/services/img/${id}`, // Archive Cover API
-            author: Array.isArray(doc.creator) ? doc.creator.join(", ") : doc.creator || "Autor i panjohur",
-            release_date: doc.year || doc.date?.substring(0, 4),
-            hasOnlineRead: true, // Archive gjithmonë ka lexim online nëse është text
-            readUrl: `https://archive.org/embed/${id}?ui=embed&bgcolor=000000&color=ffffff&controls=1`,
-            audioUrl: `https://archive.org/download/${id}/${id}.mp3`, // Supozim nëse ekziston
-          };
-        });
+        const mappedArchiveBooks: Book[] = archiveDocs.map(transformArchiveBook);
 
-        // Bashkimi i rezultateve 
-        // Archive.org vendoset në fillim ose fund sipas dëshirës (këtu i bashkova në fund)
-        // Mund të bësh filter për duplicate ID nëse ka rrezik mbivendosje
+        // Combine results
         const combinedBooks = [...mappedOLBooks, ...mappedArchiveBooks];
-        const totalCount = (olRes.data.numFound || 0) + (archiveRes.data.response?.numFound || 0);
+        
+        // Sort: books with "Lexo / Audio" (hasOnlineRead: true) first
+        const sortedBooks = combinedBooks.sort((a, b) => {
+          // If both have or both don't have online read, maintain original order
+          if (a.hasOnlineRead === b.hasOnlineRead) return 0;
+          // Books with online read come first
+          return a.hasOnlineRead ? -1 : 1;
+        });
+        
+        const totalCount =
+          (olRes.data.numFound || 0) + (archiveRes.data.response?.numFound || 0);
 
-        setData(combinedBooks);
+        setData(sortedBooks);
         setTotalFound(totalCount);
         setIsLoading(false);
       })
@@ -164,7 +88,7 @@ const useBooks = (bookQuery: BookQuery, page: number = 1): UseBooksResult => {
 
   return {
     data,
-    totalPages: Math.ceil((totalFound || 1) / 25),
+    totalPages: Math.ceil((totalFound || 1) / PAGINATION.ITEMS_PER_PAGE),
     error,
     isLoading,
   };

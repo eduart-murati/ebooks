@@ -8,7 +8,7 @@ import {
   HStack,
   Button,
 } from "@chakra-ui/react";
-import type { Book } from "@/hooks/useBooks";
+import type { Book } from "@/types/book";
 import no_image from "../assets/no_image.svg";
 
 interface Props {
@@ -41,16 +41,30 @@ const BookCard = ({ book, onClickDetails, onClickRead }: Props) => {
       <CardBody p={3}>
         <VStack align="flex-start" gap={0}>
           <Text
-            lineClamp={2}
-            fontSize="lg"
+            fontSize="md"
             fontWeight="bold"
             cursor="pointer"
             onClick={onClickDetails}
+            minH="24px"
+            maxH="24px"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            title={book.title} // Tooltip me titullin e plotë
           >
             {book.title}
           </Text>
 
-          <Text fontSize="sm" color="gray.500">
+          <Text 
+            fontSize="sm" 
+            color="gray.500"
+            minH="20px"
+            maxH="20px"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            title={book.author || "Autor i panjohur"} // Tooltip me autorin e plotë
+          >
             {book.author || "Autor i panjohur"}
           </Text>
 

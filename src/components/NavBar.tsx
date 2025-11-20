@@ -6,6 +6,7 @@ import { FaMoon, FaSun } from "react-icons/fa";
 import type { Genre } from "@/hooks/useGenres";
 import GenresMenu from "./GenresMenu";
 import SearchInput from "./SearchInput";
+import { ArrowBackIcon } from "./icons/ArrowBackIcon";
 
 interface Props {
   searchText: string;
@@ -17,23 +18,6 @@ interface Props {
   isDetailsView?: boolean;
   onBack?: () => void;
 }
-
-// SVG për shigjetën e kthimit
-const ArrowBackSvg = (props: any) => (
-  <svg
-    {...props}
-    viewBox="0 0 24 24"
-    width="1em"
-    height="1em"
-    stroke="currentColor"
-    strokeWidth="2"
-    fill="none"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="15 18 9 12 15 6"></polyline>
-  </svg>
-);
 
 const NavBar = ({
   searchText,
@@ -74,7 +58,7 @@ const NavBar = ({
               size={{ base: "sm", md: "md" }}
             >
               <HStack gap={1}>
-                <ArrowBackSvg style={{ width: "16px", height: "16px" }} />
+                <ArrowBackIcon size="16px" />
                 <Text display={{ base: "none", md: "block" }}>Kthehu</Text>
               </HStack>
             </Button>
@@ -86,13 +70,15 @@ const NavBar = ({
             width={{ base: "120px", md: "189px" }}
             height={{ base: "30px", md: "47px" }}
             alt="Logo"
+            flexShrink={0}
           />
         </HStack>
 
         {/* Search - Desktop */}
         <Box
           flex="1"
-          maxW="600px"
+          minW={0} // Lejon që të tkurret nëse është e nevojshme
+          maxW="none" // Heqim limitin maksimal për të shtrirë më shumë
           mx={{ base: 0, md: 4 }}
           display={{ base: "none", md: "block" }} // jo per mob
         >

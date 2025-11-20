@@ -1,5 +1,4 @@
-import { Box, CloseButton, Icon, Text } from "@chakra-ui/react";
-import { FaVolumeUp } from "react-icons/fa";
+import { Box, CloseButton, Text } from "@chakra-ui/react";
 import { useRef } from "react";
 
 interface BookReaderProps {
@@ -9,32 +8,15 @@ interface BookReaderProps {
   bookTitle?: string;
 }
 
-const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+const BookReader = ({ url, onClose, bookTitle }: BookReaderProps) => {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const HEADER_HEIGHT = "50px";
   const modifiedUrl = url.includes("#mode/2") ? url : `${url}#mode/2`;
 
-  const handlePlayAudio = () => {
-    if (!audioUrl) return;
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio(audioUrl);
-    } else {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-
-    audioRef.current.play().catch((e) => console.error(e));
-  };
-
   const handleClose = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
+    // Mbyll reader-in (audio në iframe vazhdon për shkak të CORS)
     if (iframeRef.current) {
-      iframeRef.current.src = ""; // ndalon media brenda iframe
+      iframeRef.current.src = "about:blank";
     }
     onClose();
   };
@@ -99,34 +81,6 @@ const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
           size="lg"
         />
 
-        {/* Audio */}
-        {audioUrl && (
-          <Box
-            aria-label="Play audio"
-            onClick={handlePlayAudio}
-            as="button"
-            border="1px solid"
-            borderColor="blue.500"
-            color="blue.500"
-            borderRadius="md"
-            p={1}
-            w="32px"
-            h="32px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            bg="transparent"
-            cursor="pointer"
-            _hover={{ bg: "blue.500", color: "white" }}
-            position="absolute"
-            top="8px"
-            right="50px"
-            zIndex={50}
-          >
-            <Icon as={FaVolumeUp} color="inherit" boxSize="1em" />
-          </Box>
-        )}
-
         {/* Iframe */}
         <iframe
           ref={iframeRef}
@@ -136,7 +90,6 @@ const BookReader = ({ url, onClose, audioUrl, bookTitle }: BookReaderProps) => {
           style={{ border: "none" }}
           title="Book Reader"
           allow="autoplay; fullscreen"
-          allowFullScreen
         />
       </Box>
     </Box>
