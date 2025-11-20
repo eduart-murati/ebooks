@@ -1,5 +1,4 @@
 import type { BookQuery } from "@/types/book";
-import type { Genre } from "@/hooks/useGenres";
 import { SORT_OPTIONS_MAP } from "@/constants";
 
 /**
